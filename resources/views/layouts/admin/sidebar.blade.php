@@ -1,4 +1,4 @@
-php artisan ui bootstrap --auth<div class="sidebar-wrapper" sidebar-layout="stroke-svg">
+<div class="sidebar-wrapper" sidebar-layout="stroke-svg">
   <div>
     <div class="logo-wrapper" style="height: auto; width:200px;"><a href="{{ url('/') }}"><img class="img-fluid for-light" src="{{ asset(env('APP_LOGO_DARK')) }}" alt=""><img class="img-fluid for-dark" src="{{ asset(env('APP_LOGO_LIGHT')) }}" alt=""></a>
       <div class="back-btn"><i class="fa fa-angle-left"></i></div>
