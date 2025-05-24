@@ -40,8 +40,8 @@
             </div>
           </div>
         </li> --}}
-        <li>                         <span class="header-search">
-          <i data-feather="search"></i></span></li>
+        {{-- <li>                         <span class="header-search">
+          <i data-feather="search"></i></span></li> --}}
         {{-- <li class="onhover-dropdown">
           <i data-feather="star"></i>
           <div class="onhover-show-div bookmark-flip">
@@ -86,11 +86,11 @@
             </div>
           </div>
         </li> --}}
-        <li>
+        {{-- <li>
           <div class="mode">
             <i class="fa fa-moon-o"></i>
           </div>
-        </li>
+        </li> --}}
         {{-- <li class="cart-nav onhover-dropdown">
           <div class="cart-box">
             <i data-feather="shopping-bag"></i><span class="badge rounded-pill badge-success">2</span>

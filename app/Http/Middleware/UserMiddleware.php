@@ -4,6 +4,7 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserMiddleware
@@ -15,10 +16,10 @@ class UserMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(auth()->user()->role_as == 'User'){
+        if(Auth::user()->role_as == 'Admin' || Auth::user()->role_as == 'Warehouse' || Auth::user()->role_as == 'User'){
             return $next($request);
         }else{
-            return redirect()->route('home')->with('status','Access Denied as you are not an User');
+            return redirect()->route('home')->with('error','Access Denied as you are not an User');
         }
     }
 }

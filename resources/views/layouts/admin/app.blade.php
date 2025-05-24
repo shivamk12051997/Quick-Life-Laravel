@@ -87,6 +87,20 @@
       .cke_bottom.cke_reset_all{
         display: block;
       }
+      .product-box{
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+      #modal_loader{
+        background: rgba(255, 255, 255, 0.8);
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 9999;
+      }
     </style>
     @yield('css')
   </head>
@@ -119,17 +133,18 @@
         <div class="page-body">
           <div class="container-fluid">        
             <div class="page-title">
-              <div class="row">
-                <div class="col-6">
+              <div class="row justify-content-between">
+                <div class="col-auto">
                   <h3>@yield('title')</h3>
                 </div>
-                <div class="col-6">
-                  <ol class="breadcrumb">
+                <div class="col-auto text-end">
+                  @yield('btns')
+                  {{-- <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">                                       
                       <i data-feather="home"></i></a></li>
                     @yield('breadcrumb-items')
                     <li class="breadcrumb-item active">@yield('title')</li>
-                  </ol>
+                  </ol> --}}
                 </div>
               </div>
             </div>
@@ -180,9 +195,6 @@
     <script src="{{ asset('assets/js/sweet-alert/sweetalert.min.js') }}"></script>
     <script src="{{ asset('assets/js/select2/select2.full.min.js') }}"></script>
     <script src="{{ asset('assets/js/select2/select2-custom.js') }}"></script>
-    <script src="{{ asset('assets/js/editor/ckeditor/ckeditor.js') }}"></script>
-    <script src="{{ asset('assets/js/editor/ckeditor/adapters/jquery.js') }}"></script>
-    <script src="{{ asset('assets/js/editor/ckeditor/styles.js') }}"></script>
     {{-- <script src="{{ asset('assets/js/sweet-alert/app.js') }}"></script> --}}
     <!-- Plugins JS Ends-->
     <!-- Theme js-->
@@ -199,6 +211,11 @@
       $.notify({ title:'Deleted', message:'{{ session('danger') }}' }, { type:'secondary', });
     </script>
     @endif
+    @if (session('error'))
+    <script>
+      $.notify({ title:'Error', message:'{{ session('error') }}' }, { type:'danger', });
+    </script>
+    @endif
     @if ($errors->any())
       @foreach ($errors->all() as $error)
       <script>
@@ -208,8 +225,7 @@
     @endif
     <script>
       $(document).on("submit", "form", function(n){
-        $('form button[type="submit"]').html('<div class="spinner-border text-light spinner-border-sm"></div>');
-        $('form button[type="submit"]').addClass('disabled');
+        $(this).append('<div id="modal_loader"><div class="d-flex justify-content-center align-items-center" style="height: 100%;"><div class="loader-box"><div class="loader-37"></div></div><div class="loader-text ms-2">Loading...</div></div></div>');
       });//submit
     </script>
     <script>
@@ -224,8 +240,25 @@
         .then((willDelete) => {
             if (willDelete) {
                 $.get('{{ url('media/delete')}}/'+id, function(data){
-                  $.notify({ title:'Success', message:'Vendor Saved Successfully' }, { type:'success', });
+                  $.notify({ title:'Success', message:'Media Deleted Successfully' }, { type:'success', });
                   $('.media_id_'+id).remove();
+                });
+            }
+        })
+      }
+      function delete_entry(url, id){
+        swal({
+            title: "Are you sure?",
+            text: "You won't be able to revert this file!",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        })
+        .then((willDelete) => {
+            if (willDelete) {
+                $.get(url, function(data){
+                  $.notify({ title:'Message', message:data.message }, { type:'info', });
+                  $('#tr_'+id).remove();
                 });
             }
         })

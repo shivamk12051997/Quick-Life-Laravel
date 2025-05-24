@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class WebsiteController extends Controller
 {
@@ -58,5 +60,17 @@ class WebsiteController extends Controller
         file_put_contents(base_path('.env'), $contents);
         
         return redirect()->back()->with('success','Website Setting Update Successfully');
+    }
+
+    public function media_delete($id)
+    {
+        $media = Media::find($id);
+        $media->delete();
+        return redirect()->back()->with('success','File Deleted Successfully');
+    }
+    public function user_login($id)
+    {
+        Auth::loginUsingId($id);
+        return redirect()->route('admin.dashboard');
     }
 }

@@ -22,37 +22,60 @@
               <i data-feather="home"></i><span>Dashboard</span>
             </a>
           </li>
-          {{-- <li class="sidebar-list">
-            <a class="sidebar-link sidebar-title link-nav" href="{{ route('shipment_receipt.index') }}">
-              <i data-feather="home"></i><span>Shipment Receipts</span>
+          @if (Auth::user()->role_as == 'Admin')
+          <li class="sidebar-main-title">
+            <div>
+              <h6>Product Management</h6>
+            </div>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('admin.product.index') }}">
+              <i data-feather="home"></i><span>All Products</span>
             </a>
-          </li> --}}
+          </li>
+          @endif
+           <li class="sidebar-main-title">
+            <div>
+              <h6>Stock Management</h6>
+            </div>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('warehouse.stock_details.index') }}">
+              <i data-feather="home"></i><span>All Stock Details</span>
+            </a>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('warehouse.current_stock.index') }}">
+              <i data-feather="home"></i><span>Current Stock</span>
+            </a>
+          </li>
+          @if (Auth::user()->role_as == 'Admin')
           <li class="sidebar-main-title">
             <div>
               <h6>Settings</h6>
             </div>
           </li>
-          {{-- <li class="sidebar-list">
+          <li class="sidebar-list">
             <a class="sidebar-link sidebar-title" href="#">
-              <i data-feather="package"></i><span>Master Attributes</span>
+              <i data-feather="package"></i><span>Master Fields</span>
             </a>
             <ul class="sidebar-submenu">
-              <li><a href="{{ route('master.attribute.index') }}">All Attributes</a></li>
-              @foreach (App\Models\Attribute::where('status',1)->get() as $item)
-              <li><a href="{{ route('master.attribute.show', $item->slug) }}">{{ $item->name }}</a></li>
-              @endforeach
+              <li><a href="{{ route('admin.category.index') }}">All Categories</a></li>
+              <li><a href="{{ route('admin.sub_category.index') }}">All Sub Categories</a></li>
+              <li><a href="{{ route('admin.brand.index') }}">All Brands/Manufacturers</a></li>
             </ul>
           </li>
           <li class="sidebar-list">
-            <a class="sidebar-link sidebar-title link-nav {{Route::is('user*') ? 'active':''}}" href="{{ route('user.index') }}">
-              <i data-feather="home"></i><span>Manage Users</span>
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('admin.warehouse.index') }}">
+              <i data-feather="home"></i><span>All Warehouses</span>
             </a>
-          </li> --}}
+          </li>
           <li class="sidebar-list">
             <a class="sidebar-link sidebar-title link-nav" href="{{ route('admin.website.setting') }}">
               <i data-feather="home"></i><span>Website Setting</span>
             </a>
           </li>
+          @endif
           {{-- <li class="sidebar-list">
             <a class="sidebar-link sidebar-title" href="#">
               <i data-feather="package"></i><span>Manage Employees</span>
