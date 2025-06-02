@@ -27,7 +27,7 @@
                     <div class="login-main">
                         <form class="theme-form" method="POST" action="{{ url('login') }}">
                             @csrf
-                            <h4>Sign in to your account</h4>
+                            <h4>Sign in to your account fd</h4>
                             <p>Enter your email & password to login</p>
                             <div class="form-group">
                                 <label class="col-form-label">Email Address</label>
