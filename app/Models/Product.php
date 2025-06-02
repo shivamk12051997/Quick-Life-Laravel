@@ -20,6 +20,21 @@ class Product extends Model implements HasMedia
               ->sharpen(10);
     }
 
+    protected $appends = ['image_url', 'gallery_urls'];
+
+    public function getImageUrlAttribute()
+    {
+        $media = $this->getFirstMedia('main_img');
+        return $media ? $media->getUrl() : null;
+    }
+
+    public function getGalleryUrlsAttribute()
+    {
+        return $this->getMedia('gallery_imgs')->map(function ($media) {
+            return $media->getUrl();
+        })->toArray();
+    }
+
     use SoftDeletes;
     protected $fillable = [
         'created_by_id',
@@ -38,6 +53,8 @@ class Product extends Model implements HasMedia
         'status',
         'deleted_at',
     ];
+
+    
     
     public function brand()
     {

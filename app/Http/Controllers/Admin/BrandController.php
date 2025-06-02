@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
+use Intervention\Image\Laravel\Facades\Image;
 
 class BrandController extends Controller
 {
@@ -55,25 +56,44 @@ class BrandController extends Controller
                 'errors' => $validator->errors()
             ], 422);
         }
-
+        
         try {
             // Step 3: Save or update your data
             $input = $request->all();
-
+            
             $input['created_by_id'] = Auth::user()->id;
             $input['status'] = $request->status ?? 0;
             $input['slug'] = Str::slug($request->name, '-');
+            
+            // Handle main_img as a simple path
+            if ($request->hasFile('img')) {
+                $file = $request->file('img');
+                $fileName = time() . '_' . $file->getClientOriginalName();
 
-            $item = Brand::updateOrCreate(['id' => $input['id']],$input);
+                $filePath = 'uploads/brands/' . $fileName;
+                $thumbPath = 'uploads/brands/thumbs/' . $fileName;
 
-            if($request->hasFile('main_img')) {
-                // Delete old main image if exists
-                if ($item->getFirstMedia('main_img')) {
-                    $item->getFirstMedia('main_img')->delete();
+                // Save original image
+                $file->move(public_path('uploads/brands'), $fileName);
+
+                // Create and save thumbnail without stretching
+                $thumbnail = Image::read(public_path('uploads/brands/' . $fileName))
+                    ->fit(150, 150, function ($constraint) {
+                        $constraint->upsize();
+                    });
+
+                $thumbnail->save(public_path('uploads/brands/thumbs/' . $fileName));
+
+                $input['img'] = $filePath;
+                $input['thumb'] = $thumbPath;
+
+                // Delete old image if exists
+                if (file_exists(public_path($request->old_img ?? '#'))) {
+                    unlink(public_path($request->old_img));
                 }
-                $item->addMedia($request->file('main_img'))->toMediaCollection('main_img');
-                // Reload the item to get the latest media
             }
+
+            $item = Brand::updateOrCreate(['id' => $input['id']], $input);
 
             // Step 4: Return success response with 200
             return response()->json([

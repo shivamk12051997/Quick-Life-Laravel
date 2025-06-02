@@ -18,7 +18,17 @@ class SubCategory extends Model implements HasMedia
               ->width(368)  
               ->height(232)
               ->sharpen(10);
-    }use SoftDeletes;
+    }
+    
+    protected $appends = ['image_url'];
+
+    public function getImageUrlAttribute()
+    {
+        $media = $this->getFirstMedia('main_img');
+        return $media ? $media->getUrl() : null;
+    }
+    
+    use SoftDeletes;
     protected $fillable = [
         'created_by_id',
         'category_id',
