@@ -182,7 +182,7 @@
 
 <div class="modal fade" id="edit_profile" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
-      <form action="{{ route('user.edit_profile.store') }}" method="post" class="modal-content" enctype="multipart/form-data">
+      <form action="{{ route('edit_profile.store') }}" method="post" class="modal-content" enctype="multipart/form-data">
           @csrf
           
           <div class="modal-header">
