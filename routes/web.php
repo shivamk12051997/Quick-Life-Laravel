@@ -26,9 +26,11 @@ Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('ho
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('edit_profile/store', [WebsiteController::class, 'edit_profile_store'])->name('edit_profile.store');
     Route::get('media/delete/{id}', [WebsiteController::class, 'media_delete'])->name('media.delete');
     
     Route::get('get_sub_category', [AjaxController::class, 'get_sub_category'])->name('get_sub_category');
+
 
 });
 

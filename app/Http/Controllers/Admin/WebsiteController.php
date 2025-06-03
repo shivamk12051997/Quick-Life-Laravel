@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class WebsiteController extends Controller
@@ -62,12 +64,44 @@ class WebsiteController extends Controller
         return redirect()->back()->with('success','Website Setting Update Successfully');
     }
 
+    public function edit_profile_store(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => [
+                'required',
+                'string',
+                'email',
+                'max:255',
+                Rule::unique('users')->ignore(Auth::id())->whereNull('deleted_at'),
+            ],
+            'phone' => 'required|string|max:15',
+        ]);
+
+        $user = Auth::user();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->phone = $request->phone;
+        if ($request->password) {
+            $user->password = Hash::make($request->password);
+            $user->show_password = $request->password;
+        }
+        $user->save();
+
+        return response()->json([
+                'id' => 0,
+                'html' => '',
+                'message' => 'Profile updated successfully.'
+            ], 200);
+    }
+
     public function media_delete($id)
     {
         $media = Media::find($id);
         $media->delete();
         return redirect()->back()->with('success','File Deleted Successfully');
     }
+    
     public function user_login($id)
     {
         Auth::loginUsingId($id);

@@ -168,7 +168,7 @@
             {{-- <li><a href="index.html#"><i data-feather="user"></i><span>Account </span></a></li>
             <li><a href="index.html#"><i data-feather="mail"></i><span>Inbox</span></a></li>
             <li><a href="index.html#"><i data-feather="file-text"></i><span>Taskboard</span></a></li> --}}
-            <li><a href="javascript:void({{ auth()->user()->id }})" data-bs-toggle="modal" data-bs-target="#edit_model" onclick="edit_profile({{ auth()->user()->id }})"><i data-feather="settings"></i><span>Edit Profile</span></a></li>
+            <li><a href="javascript:void({{ auth()->user()->id }})" data-bs-toggle="modal" data-bs-target="#edit_profile"><i data-feather="settings"></i><span>Edit Profile</span></a></li>
             <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i data-feather="log-in"> </i><span>Log Out</span></a></li>
           </ul>
           <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -180,19 +180,39 @@
   </div>
 </div>
 
-{{-- <div class="modal fade" id="edit_model" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+<div class="modal fade" id="edit_profile" tabindex="-1" aria-labelledby="mySmallModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
-      <form action="{{ route('user.insert') }}" method="post" class="modal-content" id="edit_profile_form" enctype="multipart/form-data">
+      <form action="{{ route('user.edit_profile.store') }}" method="post" class="modal-content" enctype="multipart/form-data">
+          @csrf
           
+          <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Edit Profile</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-md-6 form-group mb-3">
+                <label for="">Name <span>*</span></label>
+                <input type="text" name="name" class="form-control" value="{{ auth()->user()->name }}" required>
+              </div>
+              <div class="col-md-6 form-group mb-3">
+                <label for="">Phone <span>*</span></label>
+                <input type="text" name="phone" class="form-control" value="{{ auth()->user()->phone }}" required>
+              </div>
+              <div class="col-md-6 form-group mb-3">
+                <label for="">Email <span>*</span></label>
+                <input type="text" name="email" class="form-control" value="{{ auth()->user()->email }}" required>
+              </div>
+              <div class="col-md-6 form-group mb-3">
+                <label for="">Password <span>*</span></label>
+                <input type="password" name="password" class="form-control" required>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+          </div>
       </form>
   </div>
-</div> --}}
-
-<script>
-  function edit_profile(id){
-    $('#edit_profile_form').html('<div class="row justify-content-center text-align-items-center p-5"><div class="spinner-border text-primary"></div></div>');
-      $.get('{{ url('user/edit') }}/'+id, function(data){
-          $('#edit_profile_form').html(data);
-      });
-  }
-</script>
+</div>

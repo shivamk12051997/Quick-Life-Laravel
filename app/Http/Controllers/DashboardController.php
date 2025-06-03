@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class DashboardController extends Controller
 {
@@ -23,4 +25,6 @@ class DashboardController extends Controller
             return redirect()->route('user.dashboard')->with('error', session('error'));
         }
     }
+
+   
 }
