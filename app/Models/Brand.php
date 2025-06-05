@@ -20,12 +20,17 @@ class Brand extends Model implements HasMedia
               ->sharpen(10);
     }
 
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url', 'thumb_url'];
 
     public function getImageUrlAttribute()
     {
         $media = $this->getFirstMedia('main_img');
         return $media ? $media->getUrl() : null;
+    }
+    public function getThumbUrlAttribute()
+    {
+        $media = $this->getFirstMedia('main_img');
+        return $media ? $media->getUrl('thumb') : null;
     }
 
     use SoftDeletes;

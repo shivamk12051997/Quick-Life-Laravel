@@ -1,16 +1,8 @@
 <td>{{ $item->name ?? '-' }}</td>
 <td>
-    @if (count($item->getMedia('main_img') ?? []) != 0)
-        @foreach (($item->getMedia('main_img') ?? []) as $file)
-        <div class="img-box media_id_{{ $file->id }}">
-            <a href="{{ $file->getURL() ?? '#' }}" target="_blank"><img src="{{ $file->getURL('thumb') ?? '#' }}" alt="" style="width: 60px; height: 60px; object-fit: cover"></a>
-        </div>
-        @endforeach
-    @else   
-        <div class="img-box">
-            <a href="{{ asset('no_image.jpg') }}" target="_blank"><img src="{{ asset('no_image.jpg') }}" alt="" style="width: 60px; height: 60px; object-fit: cover"></a>
-        </div>
-    @endif
+    <div class="img-box">
+        <a href="{{ $item->image_url ?? asset('no_image.jpg') }}" target="_blank"><img src="{{ $item->image_url ?? asset('no_image.jpg') }}" alt="" style="width: 60px; height: 60px; object-fit: cover"></a>
+    </div>
 </td>
 <td>{{ $item->brand->name ?? '-' }}</td>
 <td>{{ $item->category->name ?? '-' }}</td>

@@ -14,13 +14,9 @@
             <div class="col-md-12 form-group mb-3">
                 <h6>Image <small>(Optional)</small></h6>
                 <input type="file" class="form-control" name="main_img" id="" accept="image/*">
-                @if (($brand ?? '') != '')
-                    @foreach (($brand->getMedia('main_img') ?? []) as $file)
-                    <div class="img-box media_id_{{ $file->id }}">
-                        <a href="{{ $file->getURL() ?? '#' }}" target="_blank"><img src="{{ $file->getURL('thumb') ?? '#' }}" alt="" style="width: 60px; height: 60px; object-fit: cover"></a>
-                    </div>
-                    @endforeach
-                @endif
+                <div class="img-box">
+                    <a href="{{ $brand->image_url ?? asset('no_image.jpg') }}" target="_blank"><img src="{{ $brand->image_url ?? asset('no_image.jpg') }}" alt="" style="width: 60px; height: 60px; object-fit: cover"></a>
+                </div>
             </div>
             <div class="col-md-6 form-group">
                 <h6>Status</h6>

@@ -15,17 +15,24 @@ class Category extends Model implements HasMedia
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
-              ->width(368)  
-              ->height(232)
-              ->sharpen(10);
+            ->width(368)
+            ->height(232)
+            ->sharpen(10)
+            ->format('webp');
     }
 
-    protected $appends = ['image_url'];
+    protected $appends = ['image_url', 'thumb_url'];
 
     public function getImageUrlAttribute()
     {
         $media = $this->getFirstMedia('main_img');
         return $media ? $media->getUrl() : null;
+    }
+    
+    public function getThumbUrlAttribute()
+    {
+        $media = $this->getFirstMedia('main_img');
+        return $media ? $media->getUrl('thumb') : null;
     }
     
     use SoftDeletes;
@@ -40,10 +47,10 @@ class Category extends Model implements HasMedia
 
     public function products()
     {
-    	return $this->hasMany('App\Models\Product', 'category_id', 'id');
+        return $this->hasMany('App\Models\Product', 'category_id', 'id');
     }
     public function sub_categories()
     {
-    	return $this->hasMany('App\Models\SubCategory', 'category_id', 'id');
+        return $this->hasMany('App\Models\SubCategory', 'category_id', 'id');
     }
 }

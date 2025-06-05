@@ -20,12 +20,18 @@ class Product extends Model implements HasMedia
               ->sharpen(10);
     }
 
-    protected $appends = ['image_url', 'gallery_urls'];
+    protected $appends = ['image_url', 'thumb_url', 'gallery_urls'];
 
     public function getImageUrlAttribute()
     {
         $media = $this->getFirstMedia('main_img');
         return $media ? $media->getUrl() : null;
+    }
+
+    public function getThumbUrlAttribute()
+    {
+        $media = $this->getFirstMedia('main_img');
+        return $media ? $media->getUrl('thumb') : null;
     }
 
     public function getGalleryUrlsAttribute()
