@@ -75,7 +75,7 @@ class FrontController extends Controller
 
     function product_show($slug)
     {
-        $product = Product::where('slug', $slug)->first();
+        $product = Product::where('slug', $slug)->with('brand')->with('category')->with('sub_category')->first();
         return response()->json([
             'message' => 'Product details',
             'data' => $product ? $product : 'Product not found'
@@ -110,6 +110,34 @@ class FrontController extends Controller
         return response()->json([
             'message' => 'List of sub categories',
             'data' => $sub_categories
+        ])->setStatusCode(200, 'OK', [
+            'Content-Type' => 'application/json'
+        ]);
+    }
+     function products_by_category(Request $request, $slug)
+    {
+        $category = Category::where('slug', $slug)->first();
+        if (!$category) {
+            return response()->json([
+                'message' => 'Category not found',
+                'data' => []
+            ])->setStatusCode(404, 'Not Found', [
+                'Content-Type' => 'application/json'
+            ]);
+        }
+
+        $products = $category->products()->where('status', 1)->orderBy('created_at', 'desc')->paginate($request->input('per_page', 30));
+        if ($products->isEmpty()) {
+            return response()->json([
+                'message' => 'No products found in this category',
+                'data' => []
+            ])->setStatusCode(404, 'Not Found', [
+                'Content-Type' => 'application/json'
+            ]);
+        }
+        return response()->json([
+            'message' => 'List of products in category: ' . $category->name,
+            'data' => $products
         ])->setStatusCode(200, 'OK', [
             'Content-Type' => 'application/json'
         ]);

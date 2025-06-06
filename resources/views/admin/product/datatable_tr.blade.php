@@ -1,7 +1,7 @@
 <td>{{ $item->name ?? '-' }}</td>
 <td>
     <div class="img-box">
-        <a href="{{ $item->image_url ?? asset('no_image.jpg') }}" target="_blank"><img src="{{ $item->image_url ?? asset('no_image.jpg') }}" alt="" style="width: 60px; height: 60px; object-fit: cover"></a>
+        <a href="{{ $item->image_url ?? asset('no_image.jpg') }}" target="_blank"><img src="{{ $item->image_url ?? asset('no_image.jpg') }}" alt="" style="width: 60px; height: 60px; object-fit: contain"></a>
     </div>
 </td>
 <td>{{ $item->brand->name ?? '-' }}</td>

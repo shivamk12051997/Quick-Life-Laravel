@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+// use Intervention\Image\ImageManagerStatic as Image;
 use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\InteractsWithMedia;
@@ -15,9 +16,10 @@ class Brand extends Model implements HasMedia
     public function registerMediaConversions(Media $media = null): void
     {
         $this->addMediaConversion('thumb')
-              ->width(368)  
-              ->height(232)
-              ->sharpen(10);
+                ->width(368)  
+                ->height(232)
+                ->sharpen(10)
+                ->format('webp');
     }
 
     protected $appends = ['image_url', 'thumb_url'];
@@ -48,4 +50,5 @@ class Brand extends Model implements HasMedia
     {
     	return $this->hasMany('App\Models\Product', 'brand_id', 'id');
     }
+
 }

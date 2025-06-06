@@ -46,6 +46,7 @@ class CategoryController extends Controller
         // Step 1: Validate inputs
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:categories,name,' . $request->id,
+            'main_img' => 'nullable|image|mimes:png|max:2048',
         ]);
 
         // Step 2: If validation fails, return 422 JSON response

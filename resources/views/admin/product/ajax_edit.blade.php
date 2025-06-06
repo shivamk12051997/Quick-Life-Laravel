@@ -79,7 +79,7 @@
                 @if (($product ?? '') != '')
                     @foreach (($product->getMedia('main_img') ?? []) as $file)
                     <div class="img-box media_id_{{ $file->id }}">
-                        <a href="{{ $file->getURL() ?? '#' }}" target="_blank"><img src="{{ $file->getURL('thumb') ?? '#' }}" alt="" style="width: 60px; height: 60px; object-fit: cover"></a>
+                        <a href="{{ $file->getURL() ?? '#' }}" target="_blank"><img src="{{ $file->getURL('thumb') ?? '#' }}" alt="" style="width: 60px; height: 60px; object-fit: contain"></a>
                     </div>
                     @endforeach
                 @endif
@@ -90,7 +90,7 @@
                  @if (($product ?? '') != '')
                     @foreach (($product->getMedia('gallery_imgs') ?? []) as $file)
                     <div class="img-box media_id_{{ $file->id }}">
-                        <a href="{{ $file->getURL() ?? '#' }}" target="_blank"><img src="{{ $file->getURL('thumb') ?? '#' }}" alt="" style="width: 60px; height: 60px; object-fit: cover"></a>
+                        <a href="{{ $file->getURL() ?? '#' }}" target="_blank"><img src="{{ $file->getURL('thumb') ?? '#' }}" alt="" style="width: 60px; height: 60px; object-fit: contain"></a>
                         <a href="javascript:void({{ $file->id }})" class="f-18 text-danger" onclick="delete_media({{ $file->id }})"><i class="fa fa-trash-o"></i></a>
                     </div>
                     @endforeach

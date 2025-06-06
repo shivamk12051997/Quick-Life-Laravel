@@ -16,6 +16,7 @@ Route::get('/products', [FrontController::class, 'products']);
 Route::get('/product/{slug}', [FrontController::class, 'product_show']);
 Route::get('/brands', [FrontController::class, 'brands']);
 Route::get('/categories', [FrontController::class, 'categories']);
+Route::get('/category/{slug}/products', [FrontController::class, 'products_by_category']);
 Route::get('/sub_categories/{slug}', [FrontController::class, 'sub_categories']);
 
 Route::group(['middleware' => ['auth']], function () {

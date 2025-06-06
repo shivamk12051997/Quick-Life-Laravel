@@ -15,7 +15,7 @@
                 <h6>Image <small>(Optional)</small></h6>
                 <input type="file" class="form-control" name="main_img" id="" accept="image/*">
                 <div class="img-box">
-                    <a href="{{ $category->image_url ?? asset('no_image.jpg') }}" target="_blank"><img src="{{ $category->thumb_url ?? asset('no_image.jpg') }}" alt="" style="width: 60px; height: 60px; object-fit: cover"></a>
+                    <a href="{{ $category->image_url ?? asset('no_image.jpg') }}" target="_blank"><img src="{{ $category->thumb_url ?? asset('no_image.jpg') }}" alt="" style="width: 60px; height: 60px; object-fit: contain"></a>
                 </div>
             </div>
             <div class="col-md-6 form-group">

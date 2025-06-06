@@ -47,6 +47,7 @@ class BrandController extends Controller
         // Step 1: Validate inputs
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:brands,name,' . $request->id,
+            'main_img' => 'nullable|image|mimes:png|max:2048',
         ]);
 
         // Step 2: If validation fails, return 422 JSON response
@@ -65,35 +66,16 @@ class BrandController extends Controller
             $input['status'] = $request->status ?? 0;
             $input['slug'] = Str::slug($request->name, '-');
             
-            // Handle main_img as a simple path
-            if ($request->hasFile('img')) {
-                $file = $request->file('img');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-
-                $filePath = 'uploads/brands/' . $fileName;
-                $thumbPath = 'uploads/brands/thumbs/' . $fileName;
-
-                // Save original image
-                $file->move(public_path('uploads/brands'), $fileName);
-
-                // Create and save thumbnail without stretching
-                $thumbnail = Image::read(public_path('uploads/brands/' . $fileName))
-                    ->fit(150, 150, function ($constraint) {
-                        $constraint->upsize();
-                    });
-
-                $thumbnail->save(public_path('uploads/brands/thumbs/' . $fileName));
-
-                $input['img'] = $filePath;
-                $input['thumb'] = $thumbPath;
-
-                // Delete old image if exists
-                if (file_exists(public_path($request->old_img ?? '#'))) {
-                    unlink(public_path($request->old_img));
-                }
-            }
-
             $item = Brand::updateOrCreate(['id' => $input['id']], $input);
+
+            if($request->hasFile('main_img')) {
+                // Delete old main image if exists
+                if ($item->getFirstMedia('main_img')) {
+                    $item->getFirstMedia('main_img')->delete();
+                }
+                $item->addMedia($request->file('main_img'))->toMediaCollection('main_img');
+                // Reload the item to get the latest media
+            }
 
             // Step 4: Return success response with 200
             return response()->json([

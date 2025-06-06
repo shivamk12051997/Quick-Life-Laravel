@@ -3,12 +3,12 @@
         @if (count($item->product->getMedia('main_img') ?? []) != 0)
             @foreach (($item->product->getMedia('main_img') ?? []) as $file)
             <div class="img-box media_id_{{ $file->id }}">
-                <a href="{{ $file->getURL() ?? '#' }}" target="_blank"><img src="{{ $file->getURL('thumb') ?? '#' }}" alt="" style="width: 60px; height: 60px; object-fit: cover"></a>
+                <a href="{{ $file->getURL() ?? '#' }}" target="_blank"><img src="{{ $file->getURL('thumb') ?? '#' }}" alt="" style="width: 60px; height: 60px; object-fit: contain"></a>
             </div>
             @endforeach
         @else   
             <div class="img-box">
-                <a href="{{ asset('no_image.jpg') }}" target="_blank"><img src="{{ asset('no_image.jpg') }}" alt="" style="width: 60px; height: 60px; object-fit: cover"></a>
+                <a href="{{ asset('no_image.jpg') }}" target="_blank"><img src="{{ asset('no_image.jpg') }}" alt="" style="width: 60px; height: 60px; object-fit: contain"></a>
             </div>
         @endif
         {{ $item->product->name ?? '-' }}

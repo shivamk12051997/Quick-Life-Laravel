@@ -17,7 +17,8 @@ class Product extends Model implements HasMedia
         $this->addMediaConversion('thumb')
               ->width(368)  
               ->height(232)
-              ->sharpen(10);
+              ->sharpen(10)
+              ->format('webp');
     }
 
     protected $appends = ['image_url', 'thumb_url', 'gallery_urls'];
