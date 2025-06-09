@@ -34,6 +34,11 @@
             </a>
           </li>
           @endif
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('warehouse.product_request.index') }}">
+              <i data-feather="home"></i><span>All Product Requests</span>
+            </a>
+          </li>
            <li class="sidebar-main-title">
             <div>
               <h6>Stock Management</h6>

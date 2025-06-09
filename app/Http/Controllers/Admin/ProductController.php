@@ -58,7 +58,7 @@ class ProductController extends Controller
         // Step 1: Validate inputs
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:products,name,' . $request->id,
-            'main_img' => 'nullable|image|mimes:png|max:2048',
+            'main_img' => 'nullable|image|mimes:png,webp|max:2048',
         ]);
 
         // Step 2: If validation fails, return 422 JSON response
@@ -78,6 +78,8 @@ class ProductController extends Controller
             $input['slug'] = Str::slug($request->name, '-');
 
             $item = Product::updateOrCreate(['id' => $input['id']],$input);
+            $item->code = 'P-' . str_pad($item->id, 3, '0', STR_PAD_LEFT);
+            $item->save();
 
             if($request->hasFile('main_img')) {
                 // Delete old main image if exists

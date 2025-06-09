@@ -22,7 +22,7 @@ class FrontController extends Controller
 
     function products(Request $request)
     {
-        $products = Product::where('status', 1)->with(['category', 'sub_category', 'brand'])->orderBy('created_at', 'desc');
+        $products = Product::where('status', 1)->with(['category', 'sub_category', 'brand']);
 
         if ($request->has('category')) {
             $products = $products->where('category_id', $request->input('category'));
@@ -35,19 +35,27 @@ class FrontController extends Controller
         }
         if ($request->has('search')) {
             $search = $request->input('search');
-            $products = $products->filter(function ($product) use ($search) {
-                return str_contains(strtolower($product->name), strtolower($search));
+            $products = $products->where(function ($query) use ($search) {
+                $query->where('name', 'LIKE', "%{$search}%");
             });
         }
-        if ($request->has('sort')) {
-            $sort = $request->input('sort');
-            if ($sort === 'price_asc') {
-                $products = $products->sortBy('price');
-            } elseif ($sort === 'price_desc') {
-                $products = $products->sortByDesc('price');
-            } elseif ($sort === 'newest') {
-                $products = $products->sortByDesc('created_at');
+        if ($request->has('sort_by')) {
+            $sort_by = $request->input('sort_by');
+            if ($sort_by == 'price_low') {
+                $products = $products->orderBy('sale_price','asc');
+            } elseif ($sort_by == 'price_high') {
+                $products = $products->orderBy('sale_price','desc');
+            } elseif ($sort_by == 'newest') {
+                $products = $products->orderBy('id','desc');
+            } elseif ($sort_by == 'oldest') {
+                $products = $products->orderBy('id','asc');
+            } elseif ($sort_by == 'name_asc') {
+                $products = $products->orderBy('name', 'asc');
+            } elseif ($sort_by == 'name_desc') {
+                $products = $products->orderBy('name', 'desc');
             }
+        }else{
+            $products = $products->orderBy('id','desc');
         }
         if ($request->has('per_page')) {
             $perPage = (int) $request->input('per_page');
@@ -55,14 +63,14 @@ class FrontController extends Controller
         } else {
             $products = $products->paginate(30);
         }
-        if ($products->isEmpty()) {
-            return response()->json([
-                'message' => 'No products found',
-                'data' => []
-            ])->setStatusCode(404, 'Not Found', [
-                'Content-Type' => 'application/json'
-            ]);
-        }
+        // if ($products->isEmpty()) {
+        //     return response()->json([
+        //         'message' => 'No products found',
+        //         'data' => []
+        //     ])->setStatusCode(404, 'Not Found', [
+        //         'Content-Type' => 'application/json'
+        //     ]);
+        // }
         
 
         return response()->json([

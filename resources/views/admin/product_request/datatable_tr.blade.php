@@ -1,4 +1,5 @@
 <td>{{ $item->code ?? '-' }}</td>
+<td>{{ $item->created_by->name ?? '-' }}</td>
 <td>{{ $item->name ?? '-' }}</td>
 <td>
     <div class="img-box">
@@ -14,16 +15,21 @@
     <span class="badge badge-light-{{ $item->prescription_required == 'Yes' ? 'success':'danger' }}">{{ $item->prescription_required }}</span>
 </td>
 <td>
-    <span class="badge badge-{{ $item->status == '1' ? 'success':'danger' }} pointer" id="status_{{ $item->id }}" onclick="change_status({{ $item->id }})">{{ $item->status == '1' ? 'Active':'Inactive' }}</span>
+    @if (Auth::user()->role_as == 'Admin')
+        <span class="badge badge-{{ $item->status == 'Pending' ? 'primary' : ($item->status == 'Approved' ? 'success' : 'danger') }} pointer" data-bs-toggle="modal" data-bs-target="#edit_modal"  onclick="change_status({{ $item->id }})">{{ $item->status }}</span>
+    @else
+        <span class="badge badge-light-{{ $item->status == 'Pending' ? 'primary' : ($item->status == 'Approved' ? 'success' : 'danger') }}">{{ $item->status }}</span>
+    @endif
+    {!! $item->status_remarks ? '<br><small class="text-muted">' . $item->status_remarks . '</small>' : '' !!}
 </td>
 <td>
-    {{-- <a href="{{ route('product.show',$item->id) }}" class="text-primary p-1 f-22">
+    {{-- <a href="{{ route('product_request.show',$item->id) }}" class="text-primary p-1 f-22">
         <i class="fa fa-eye"></i>
     </a> --}}
     <a href="#" class="text-warning p-1 f-22" data-toggle="tooltip" title="Edit" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $item->id }})">
         <i class="fa fa-edit"></i>
     </a>
-    <a onclick="delete_entry('{{ route('admin.product.delete',$item->id)}}', {{ $item->id }})" class="text-danger pointer p-1 f-22" data-toggle="tooltip" title="Delete">
+    <a onclick="delete_entry('{{ route('warehouse.product_request.delete',$item->id)}}', {{ $item->id }})" class="text-danger pointer p-1 f-22" data-toggle="tooltip" title="Delete">
         <i class="fa fa-trash-o"></i>
     </a>
 </td>

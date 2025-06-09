@@ -8,7 +8,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class Product extends Model implements HasMedia
+class ProductRequest extends Model implements HasMedia
 {
     use InteractsWithMedia;
     // Thumbnail conversion
@@ -18,7 +18,7 @@ class Product extends Model implements HasMedia
               ->width(368)  
               ->height(232)
               ->sharpen(10)
-              ->format('webp'); // Ensure the format is set to .webp
+              ->format('webp');
     }
 
     protected $appends = ['image_url', 'thumb_url', 'gallery_urls'];
@@ -45,9 +45,11 @@ class Product extends Model implements HasMedia
     use SoftDeletes;
     protected $fillable = [
         'created_by_id',
+        'warehouse_id',
         'brand_id',
         'category_id',
         'sub_category_id',
+        'product_id',
         'code',
         'name',
         'slug',
@@ -59,11 +61,16 @@ class Product extends Model implements HasMedia
         'use_case',
         'description',
         'status',
+        'status_remarks',
         'deleted_at',
     ];
 
     
     
+    public function created_by()
+    {
+        return $this->belongsTo('App\Models\User', 'created_by_id', 'id');
+    }
     public function brand()
     {
         return $this->belongsTo('App\Models\Brand', 'brand_id', 'id');

@@ -3,7 +3,8 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Product Code</th>
+                <th>Request Code</th>
+                <th>Requested By</th>
                 <th>Name</th>
                 <th>Image</th>
                 <th>Brand</th>
@@ -15,10 +16,10 @@
             </tr>
         </thead>
         <tbody>
-            @foreach ($product as $key => $item)
+            @foreach ($product_request as $key => $item)
             <tr id="tr_{{ $item->id }}">
-                <td class="sr">{{ $product->firstItem() + $loop->index }}</td>
-                @include('admin.product.datatable_tr')
+                <td class="sr">{{ $product_request->firstItem() + $loop->index }}</td>
+                @include('admin.product_request.datatable_tr')
             </tr>
             @endforeach
         </tbody>
@@ -27,5 +28,5 @@
 </div>
 
 <div>
-    {{$product->links()}}
+    {{$product_request->links()}}
 </div>

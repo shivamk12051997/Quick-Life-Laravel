@@ -14,6 +14,7 @@ use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Warehouse\CurrentStockController;
 use App\Http\Controllers\Warehouse\StockDetailsController;
+use App\Http\Controllers\Warehouse\ProductRequestController;
 use App\Http\Controllers\Warehouse\WarehouseDashboardController;
 
 // Route::get('/', function () {
@@ -98,6 +99,15 @@ Route::group(['middleware' => ['auth','is_Warehouse'], 'prefix' => 'warehouse'],
 
     Route::get('stock_details/current_stock', [StockDetailsController::class, 'current_stock'])->name('warehouse.stock_details.current_stock');
     Route::get('stock_details/current_stock_datatable', [StockDetailsController::class, 'current_stock_datatable'])->name('warehouse.stock_details.current_stock_datatable');
+
+    // Product Request
+    Route::get('product_request', [ProductRequestController::class, 'index'])->name('warehouse.product_request.index');
+    Route::get('product_request/datatable', [ProductRequestController::class, 'datatable'])->name('warehouse.product_request.datatable');
+    Route::post('product_request/store', [ProductRequestController::class, 'store'])->name('warehouse.product_request.store');
+    Route::get('product_request/edit', [ProductRequestController::class, 'edit'])->name('warehouse.product_request.edit');
+    Route::get('product_request/delete/{id}', [ProductRequestController::class, 'delete'])->name('warehouse.product_request.delete');
+    Route::get('product_request/change_status', [ProductRequestController::class, 'change_status'])->name('warehouse.product_request.change_status');
+    Route::post('product_request/change_status_store', [ProductRequestController::class, 'change_status_store'])->name('warehouse.product_request.change_status_store');
 });
 
 Route::group(['middleware' => ['auth','is_User'], 'prefix' => 'user'], function () {
