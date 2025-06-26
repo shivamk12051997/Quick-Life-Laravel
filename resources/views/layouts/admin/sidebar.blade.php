@@ -30,39 +30,12 @@
           </li>
           <li class="sidebar-list">
             <a class="sidebar-link sidebar-title link-nav" href="{{ route('admin.product.index') }}">
-              <i data-feather="home"></i><span>All Products</span>
+              <i data-feather="package"></i><span>All Products</span>
             </a>
-          </li>
-          @endif
-          <li class="sidebar-list">
-            <a class="sidebar-link sidebar-title link-nav" href="{{ route('warehouse.product_request.index') }}">
-              <i data-feather="home"></i><span>All Product Requests</span>
-            </a>
-          </li>
-           <li class="sidebar-main-title">
-            <div>
-              <h6>Stock Management</h6>
-            </div>
-          </li>
-          <li class="sidebar-list">
-            <a class="sidebar-link sidebar-title link-nav" href="{{ route('warehouse.stock_details.index') }}">
-              <i data-feather="home"></i><span>All Stock Details</span>
-            </a>
-          </li>
-          <li class="sidebar-list">
-            <a class="sidebar-link sidebar-title link-nav" href="{{ route('warehouse.current_stock.index') }}">
-              <i data-feather="home"></i><span>Current Stock</span>
-            </a>
-          </li>
-          @if (Auth::user()->role_as == 'Admin')
-          <li class="sidebar-main-title">
-            <div>
-              <h6>Settings</h6>
-            </div>
           </li>
           <li class="sidebar-list">
             <a class="sidebar-link sidebar-title" href="#">
-              <i data-feather="package"></i><span>Master Fields</span>
+              <i data-feather="server"></i><span>Product Master</span>
             </a>
             <ul class="sidebar-submenu">
               <li><a href="{{ route('admin.category.index') }}">All Categories</a></li>
@@ -71,13 +44,148 @@
             </ul>
           </li>
           <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('admin.product.index') }}?status_filter=0">
+              <i data-feather="x-square"></i><span>All Inactive Products</span>
+            </a>
+          </li>
+          @endif
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('warehouse.product_request.index') }}">
+              <i data-feather="corner-right-down"></i><span>All New Product Requests</span>
+            </a>
+          </li>
+          @if (Auth::user()->role_as == 'Admin')
+            <li class="sidebar-list">
+              <a class="sidebar-link sidebar-title link-nav" href="#">
+                <i data-feather="star"></i><span>All Product Reviews</span>
+              </a>
+            </li>
+          @endif
+          <li class="sidebar-main-title">
+            <div>
+              <h6>Stock Management</h6>
+            </div>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title" href="#">
+              <i data-feather="grid"></i><span>Stock Management</span>
+            </a>
+            <ul class="sidebar-submenu">
+              <li><a href="{{ route('warehouse.stock_details.index') }}?in_out_filter=In">All Stock In</a></li>
+              <li><a href="{{ route('warehouse.stock_details.index') }}?in_out_filter=Out">All Stock Out</a></li>
+              <li><a href="{{ route('warehouse.stock_details.index') }}">All Stock Details</a></li>
+              <li><a href="#">Stock Out Report</a></li>
+              <li><a href="{{ route('warehouse.current_stock.index') }}">Current Stock</a></li>
+              <li><a href="{{ route('warehouse.current_stock.index') }}?stock_filter=Out Of Stock">Out Of Stock</a></li>
+            </ul>
+          </li>
+          <li class="sidebar-main-title">
+            <div>
+              <h6>Order Management</h6>
+            </div>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('warehouse.orders.index') }}">
+              <i data-feather="shopping-bag"></i><span>All Orders</span>
+            </a>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title" href="#">
+              <i data-feather="server"></i><span>Order Filter</span>
+            </a>
+            <ul class="sidebar-submenu">
+              <li><a href="#">All Pending Orders</a></li>
+              <li><a href="#">All Confirmed Orders</a></li>
+              <li><a href="#">All Out Of Delivery Orders</a></li>
+              <li><a href="#">All Canceled Orders</a></li>
+              <li><a href="#">All Shifted Orders</a></li>
+            </ul>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="#">
+              <i data-feather="shopping-cart"></i><span>All Abandoned Cart</span>
+            </a>
+          </li>
+          <li class="sidebar-main-title">
+            <div>
+              <h6>Payment Management</h6>
+            </div>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="#">
+              <i data-feather="shopping-bag"></i><span>All Payments</span>
+            </a>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title" href="#">
+              <i data-feather="server"></i><span>Payment Filter</span>
+            </a>
+            <ul class="sidebar-submenu">
+              <li><a href="#">All Received Payments</a></li>
+              <li><a href="#">All Sent Payments</a></li>
+              <li><a href="#">All Pending to Send Payments</a></li>
+            </ul>
+          </li>
+          <li class="sidebar-main-title">
+            <div>
+              <h6>Doctor Management</h6>
+            </div>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="#">
+              <i data-feather="users"></i><span>All Doctors</span>
+            </a>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title" href="#">
+              <i data-feather="server"></i><span>Doctor Filter</span>
+            </a>
+            <ul class="sidebar-submenu">
+              <li><a href="#">All Active Doctors</a></li>
+              <li><a href="#">All Inactive Doctors</a></li>
+              <li><a href="#">All Pending to Approve Doctors</a></li>
+              <li><a href="#">All Rejected Doctors</a></li>
+            </ul>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title" href="#">
+              <i data-feather="server"></i><span>Consultation Filter</span>
+            </a>
+            <ul class="sidebar-submenu">
+              <li><a href="#">All Consultation History</a></li>
+              <li><a href="#">All Consultations Recorded</a></li>
+            </ul>
+          </li>
+          @if (Auth::user()->role_as == 'Admin')
+          <li class="sidebar-main-title">
+            <div>
+              <h6>Chemist & Warehouse</h6>
+            </div>
+          </li>
+          <li class="sidebar-list">
             <a class="sidebar-link sidebar-title link-nav" href="{{ route('admin.warehouse.index') }}">
               <i data-feather="home"></i><span>All Warehouses</span>
             </a>
           </li>
           <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title" href="#">
+              <i data-feather="package"></i><span>Warehouse Filter</span>
+            </a>
+            <ul class="sidebar-submenu">
+              <li><a href="#">All Requests</a></li>
+              <li><a href="#">All Approved</a></li>
+              <li><a href="#">All Rejected</a></li>
+            </ul>
+          </li>
+
+          <li class="sidebar-main-title">
+            <div>
+              <h6>Settings</h6>
+            </div>
+          </li>
+          <li class="sidebar-list">
             <a class="sidebar-link sidebar-title link-nav" href="{{ route('admin.website.setting') }}">
-              <i data-feather="home"></i><span>Website Setting</span>
+              <i data-feather="settings"></i><span>Website Setting</span>
             </a>
           </li>
           @endif

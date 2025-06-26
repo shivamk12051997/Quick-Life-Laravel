@@ -65,6 +65,15 @@
                                         </select>
                                     </div>
                                     <div class="col-sm-12 col-md-6 col-lg-auto">
+                                        <label>Status: </label>
+                                        <select name="status" class="form-select form-select-sm ms-2" id="status">
+                                            <option value="" selected>All</option>
+                                            <option value="Pending" {{ request('status') == 'Pending' ? 'selected' : '' }}>Pending</option>
+                                            <option value="Approved" {{ request('status') == 'Approved' ? 'selected' : '' }}>Approved</option>
+                                            <option value="Rejected" {{ request('status') == 'Rejected' ? 'selected' : '' }}>Rejected</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6 col-lg-auto">
                                         <label>Search:</label>
                                         <input type="search" id="datatable_search" class="form-control form-control-sm" placeholder="" aria-controls="datatable">
                                     </div>

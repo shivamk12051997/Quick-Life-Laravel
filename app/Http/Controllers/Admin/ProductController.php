@@ -8,6 +8,7 @@ use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
@@ -38,6 +39,9 @@ class ProductController extends Controller
             });
         }
 
+        if(($request->status_filter ?? '') != ''){
+            $product = $product->where('status', $request->status_filter);
+        }
         if($request->brand_filter){
             $product = $product->where('brand_id', $request->brand_filter);
         }
@@ -57,8 +61,8 @@ class ProductController extends Controller
     {
         // Step 1: Validate inputs
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:products,name,' . $request->id,
-            'main_img' => 'nullable|image|mimes:png,webp|max:2048',
+            'name' => 'required|string|max:255|'. Rule::unique('products', 'name')->ignore($request->id)->whereNull('deleted_at'),
+            'main_img' => 'nullable|image|mimes:png,webp,webp|max:2048',
         ]);
 
         // Step 2: If validation fails, return 422 JSON response
@@ -74,6 +78,7 @@ class ProductController extends Controller
             $input = $request->all();
 
             $input['created_by_id'] = Auth::user()->id;
+            $input['is_featured'] = $request->is_featured ?? 0;
             $input['status'] = $request->status ?? 0;
             $input['slug'] = Str::slug($request->name, '-');
 

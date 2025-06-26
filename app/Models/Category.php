@@ -21,7 +21,7 @@ class Category extends Model implements HasMedia
             ->format('webp');
     }
 
-    protected $appends = ['image_url', 'thumb_url'];
+    protected $appends = ['image_url', 'thumb_url', 'products_count', 'sub_categories_count'];
 
     public function getImageUrlAttribute()
     {
@@ -41,16 +41,33 @@ class Category extends Model implements HasMedia
         'name',
         'slug',
         'img',
+        'is_featured',
         'status',
         'deleted_at',
     ];
 
     public function products()
     {
-        return $this->hasMany('App\Models\Product', 'category_id', 'id');
+        return $this->hasMany('App\Models\Product', 'category_id', 'id')->where('status', 1);
+    }
+    public function featured_products()
+    {
+        return $this->hasMany('App\Models\Product', 'category_id', 'id')->where('status', 1)->where('is_featured', 1);
     }
     public function sub_categories()
     {
-        return $this->hasMany('App\Models\SubCategory', 'category_id', 'id');
+        return $this->hasMany('App\Models\SubCategory', 'category_id', 'id')->where('status', 1);
+    }
+    public function featured_sub_categories()
+    {
+        return $this->hasMany('App\Models\SubCategory', 'category_id', 'id')->where('status', 1)->where('is_featured', 1);
+    }
+    public function getProductsCountAttribute()
+    {
+        return $this->products()->count();
+    }
+    public function getSubCategoriesCountAttribute()
+    {
+        return $this->sub_categories()->count();
     }
 }

@@ -56,8 +56,8 @@
                                         <label>Stock Filter: </label>
                                         <select name="stock_filter" class="form-select form-select-sm ms-2" id="stock_filter">
                                             <option value="All Stock" selected>All Stock</option>
-                                            <option value="Out Of Stock">Out Of Stock</option>
-                                            <option value="Available Stock">Available Stock</option>
+                                            <option value="Out Of Stock" {{ (request('stock_filter') == 'Out Of Stock') ? 'selected' : '' }}>Out Of Stock</option>
+                                            <option value="Available Stock" {{ (request('stock_filter') == 'Available Stock') ? 'selected' : '' }}>Available Stock</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-12 col-md-6 col-lg-auto">
@@ -65,7 +65,7 @@
                                         <select name="brand_filter" class="form-select form-select-sm ms-2" id="brand_filter">
                                             <option value="" selected>All Brands</option>
                                             @foreach (App\Models\Brand::all() as $brand)
-                                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                                <option value="{{ $brand->id }}" {{ (request('brand_filter') == $brand->id) ? 'selected' : '' }}>{{ $brand->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -74,7 +74,7 @@
                                         <select name="category_filter" class="form-select form-select-sm ms-2" id="category_filter">
                                             <option value="" selected>All Categories</option>
                                             @foreach (App\Models\Category::all() as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                <option value="{{ $category->id }}" {{ (request('category_filter') == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

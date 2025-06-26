@@ -14,6 +14,9 @@
     <span class="badge badge-light-{{ $item->prescription_required == 'Yes' ? 'success':'danger' }}">{{ $item->prescription_required }}</span>
 </td>
 <td>
+    <span class="badge badge-light-{{ $item->is_featured == '1' ? 'success':'danger' }}">{{ ($item->is_featured ?? '0') == 1 ? 'Yes' : 'No' }}</span>
+</td>
+<td>
     <span class="badge badge-{{ $item->status == '1' ? 'success':'danger' }} pointer" id="status_{{ $item->id }}" onclick="change_status({{ $item->id }})">{{ $item->status == '1' ? 'Active':'Inactive' }}</span>
 </td>
 <td>

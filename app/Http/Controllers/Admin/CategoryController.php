@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Models\Category;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
@@ -45,8 +46,8 @@ class CategoryController extends Controller
     {
         // Step 1: Validate inputs
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:categories,name,' . $request->id,
-            'main_img' => 'nullable|image|mimes:png|max:2048',
+            'name' => 'required|string|max:255|'. Rule::unique('categories', 'name')->ignore($request->id)->whereNull('deleted_at'),
+            'main_img' => 'nullable|image|mimes:png,webp|max:2048',
         ]);
 
         // Step 2: If validation fails, return 422 JSON response
@@ -63,6 +64,7 @@ class CategoryController extends Controller
 
             $input['created_by_id'] = Auth::user()->id;
             $input['status'] = $request->status ?? 0;
+            $input['is_featured'] = $request->is_featured ?? 0;
             $input['slug'] = Str::slug($request->name, '-');
 
             $item = Category::updateOrCreate(['id' => $input['id']],$input);

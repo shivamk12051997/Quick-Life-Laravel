@@ -34,11 +34,19 @@
                                         </select>
                                     </div>
                                     <div class="col-sm-12 col-md-6 col-lg-auto">
+                                        <label>Status: </label>
+                                        <select name="status_filter" class="form-select form-select-sm ms-2" id="status_filter">
+                                            <option value="" selected>All Status</option>
+                                            <option value="1" {{ ((request('status_filter') ?? '') == 1) ? 'selected' : '' }}>Active</option>
+                                            <option value="0" {{ ((request('status_filter') ?? '') == 0) ? 'selected' : '' }}>Inactive</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6 col-lg-auto">
                                         <label>Brand: </label>
                                         <select name="brand_filter" class="form-select form-select-sm ms-2" id="brand_filter">
                                             <option value="" selected>All Brands</option>
                                             @foreach (App\Models\Brand::all() as $brand)
-                                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                                <option value="{{ $brand->id }}" {{ (request('brand_filter') == $brand->id) ? 'selected' : '' }}>{{ $brand->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -47,7 +55,7 @@
                                         <select name="category_filter" class="form-select form-select-sm ms-2" id="category_filter">
                                             <option value="" selected>All Categories</option>
                                             @foreach (App\Models\Category::all() as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                <option value="{{ $category->id }}" {{ (request('category_filter') == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -94,11 +102,11 @@
             $('#get_datatable').html('<div class="loader-box"><div class="loader-37"></div></div>');
             var value = $('#datatable_page_show').val();
             var search = $('#datatable_search').val();
-            var status = $('#status').val();
+            var status_filter = $('#status_filter').val();
             var brand_filter = $('#brand_filter').val();
             var category_filter = $('#category_filter').val();
             var page = page ?? 1;
-            $.get('{{ route("admin.product.datatable") }}', { page:page, value:value, search:search, status:status, brand_filter:brand_filter, category_filter:category_filter }, function(data){
+            $.get('{{ route("admin.product.datatable") }}', { page:page, value:value, search:search, status_filter:status_filter, brand_filter:brand_filter, category_filter:category_filter }, function(data){
                 $('#get_datatable').html(data);
                 feather.replace();
             });

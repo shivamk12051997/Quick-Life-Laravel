@@ -38,7 +38,7 @@ class CurrentStockController extends Controller
             ->groupBy('product_id');
         }
         // Subquery to calculate current stock for each product
-
+        // dd($stockSub->get());
         // Join products with the stock subquery
         $product = Product::whereNull('deleted_at')
             ->leftJoinSub($stockSub, 'stock', function($join) {
@@ -64,7 +64,8 @@ class CurrentStockController extends Controller
         if($request->category_filter){
             $product = $product->where('products.category_id', $request->category_filter);
         }
-
+        // dd($product->get()->pluck('current_stock')->toArray());
+        // dd($product->where('current_stock','<=', 0.0)->get()->pluck('current_stock')->toArray());
         // Filter by stock status
         if ($request->stock_filter == 'Out Of Stock') {
             // Stock Out Products: Only those with stock movement and now out of stock

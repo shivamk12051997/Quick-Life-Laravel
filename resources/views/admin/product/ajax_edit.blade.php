@@ -67,13 +67,26 @@
                 <h6>Sale Price <span>*</span></h6>
                 <input type="number" class="form-control" name="sale_price" id="" value="{{ $product->sale_price ?? '' }}" required>
             </div>
+            <div class="col-md-2 form-group mb-3">
+                <h6>Tax Rate <small class="text-muted">(Included)</small> <span>*</span></h6>
+                <select name="tax_rate" id="" class="form-select" required>
+                    <option value="5" {{ ($product->tax_rate ?? 0) == 5 ? 'selected':'' }}>5%</option>
+                    <option value="12" {{ ($product->tax_rate ?? 0) == 12 ? 'selected':'' }}>12%</option>
+                </select>
+            </div>
+            <div class="col-md-2 form-group">
+                <h6>Is Featured <span>*</span></h6>
+                <label class="switch">
+                    <input type="checkbox"  name="is_featured" value="1" {{ ($product->is_featured ?? 0) == 1 ? 'checked':'' }}><span class="switch-state"></span>
+                </label>
+            </div>
             <div class="col-md-2 form-group">
                 <h6>Status <small class="text-muted">(Active/Inactive)</small> <span>*</span></h6>
                 <label class="switch">
                     <input type="checkbox"  name="status" value="1" {{ ($product->status ?? 1) == 1 ? 'checked':'' }}><span class="switch-state"></span>
                 </label>
             </div>
-            <div class="col-md-6 form-group mb-3">
+            <div class="col-md-3 form-group mb-3">
                 <h6>Main Image <small class="text-muted">(Single)</small> <span>*</span></h6>
                 <input type="file" class="form-control" name="main_img" id="" accept="image/*">
                 @if (($product ?? '') != '')
@@ -84,7 +97,7 @@
                     @endforeach
                 @endif
             </div>
-            <div class="col-md-6 form-group mb-3">
+            <div class="col-md-5 form-group mb-3">
                 <h6>Gallery Images <small class="text-muted">(Multiple)</small> <span>*</span></h6>
                 <input type="file" class="form-control" name="gallery_imgs[]" id="gallery_imgs" accept="image/*" multiple>
                  @if (($product ?? '') != '')

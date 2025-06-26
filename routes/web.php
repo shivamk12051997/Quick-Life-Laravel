@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AjaxController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\Warehouse\CurrentStockController;
 use App\Http\Controllers\Warehouse\StockDetailsController;
 use App\Http\Controllers\Warehouse\ProductRequestController;
 use App\Http\Controllers\Warehouse\WarehouseDashboardController;
+use App\Http\Controllers\Warehouse\OrderController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -108,6 +110,19 @@ Route::group(['middleware' => ['auth','is_Warehouse'], 'prefix' => 'warehouse'],
     Route::get('product_request/delete/{id}', [ProductRequestController::class, 'delete'])->name('warehouse.product_request.delete');
     Route::get('product_request/change_status', [ProductRequestController::class, 'change_status'])->name('warehouse.product_request.change_status');
     Route::post('product_request/change_status_store', [ProductRequestController::class, 'change_status_store'])->name('warehouse.product_request.change_status_store');
+
+    // All Orders
+    Route::get('orders', [OrderController::class, 'index'])->name('warehouse.orders.index');
+    Route::get('orders/datatable', [OrderController::class, 'datatable'])->name('warehouse.orders.datatable');
+    Route::post('orders/store', [OrderController::class, 'store'])->name('warehouse.orders.store');
+    Route::get('orders/edit', [OrderController::class, 'edit'])->name('warehouse.orders.edit');
+    Route::get('orders/show/{id}', [OrderController::class, 'show'])->name('warehouse.orders.show');
+    Route::post('order/change_status/{id}', [OrderController::class, 'change_status'])->name('warehouse.order.change_status');
+    Route::get('orders/invoice/{id}', [OrderController::class, 'invoice'])->name('warehouse.orders.invoice');
+
+    Route::get('orders/delete/{id}', [OrderController::class, 'delete'])->name('warehouse.orders.delete');
+    Route::get('orders/status/{id}', [OrderController::class, 'status'])->name('warehouse.orders.status');
+
 });
 
 Route::group(['middleware' => ['auth','is_User'], 'prefix' => 'user'], function () {

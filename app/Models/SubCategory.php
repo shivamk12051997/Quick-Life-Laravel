@@ -41,16 +41,17 @@ class SubCategory extends Model implements HasMedia
         'name',
         'slug',
         'img',
+        'is_featured',
         'status',
         'deleted_at',
     ];
 
     public function products()
     {
-    	return $this->hasMany('App\Models\Product', 'sub_category_id', 'id');
+    	return $this->hasMany('App\Models\Product', 'sub_category_id', 'id')->where('status', 1);
     }
     public function category()
     {
-        return $this->belongsTo('App\Models\Category', 'category_id', 'id');
+        return $this->belongsTo('App\Models\Category', 'category_id', 'id')->where('status', 1);
     }
 }

@@ -26,9 +26,11 @@
     {{-- <a href="{{ route('product_request.show',$item->id) }}" class="text-primary p-1 f-22">
         <i class="fa fa-eye"></i>
     </a> --}}
+    @if ($item->status != 'Approved')
     <a href="#" class="text-warning p-1 f-22" data-toggle="tooltip" title="Edit" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $item->id }})">
         <i class="fa fa-edit"></i>
     </a>
+    @endif
     <a onclick="delete_entry('{{ route('warehouse.product_request.delete',$item->id)}}', {{ $item->id }})" class="text-danger pointer p-1 f-22" data-toggle="tooltip" title="Delete">
         <i class="fa fa-trash-o"></i>
     </a>

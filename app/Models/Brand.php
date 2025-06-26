@@ -22,7 +22,7 @@ class Brand extends Model implements HasMedia
                 ->format('webp');
     }
 
-    protected $appends = ['image_url', 'thumb_url'];
+    protected $appends = ['image_url', 'thumb_url', 'products_count'];
 
     public function getImageUrlAttribute()
     {
@@ -42,13 +42,22 @@ class Brand extends Model implements HasMedia
         'slug',
         'img',
         'thumb',
+        'is_featured',
         'status',
         'deleted_at',
     ];
 
     public function products()
     {
-    	return $this->hasMany('App\Models\Product', 'brand_id', 'id');
+    	return $this->hasMany('App\Models\Product', 'brand_id', 'id')->where('status', 1);
+    }
+    public function featured_products()
+    {
+        return $this->hasMany('App\Models\Product', 'brand_id', 'id')->where('status', 1)->where('is_featured', 1);
     }
 
+    public function getProductsCountAttribute()
+    {
+        return $this->products()->count();
+    }
 }

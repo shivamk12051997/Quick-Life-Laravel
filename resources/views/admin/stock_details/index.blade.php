@@ -108,8 +108,8 @@
                                         <label>Filter: </label>
                                         <select name="in_out_filter" class="form-select form-select-sm ms-2" id="in_out_filter">
                                             <option value="">All In/Out</option>
-                                            <option value="In">In</option>
-                                            <option value="Out">Out</option>
+                                            <option value="In" {{ (request('in_out_filter') == 'In') ? 'selected' : '' }}>In</option>
+                                            <option value="Out" {{ (request('in_out_filter') == 'Out') ? 'selected' : '' }}>Out</option>
                                         </select>
                                     </div>
                                     <div class="col-sm-12 col-md-6 col-lg-auto">
@@ -117,7 +117,7 @@
                                         <select name="brand_filter" class="form-select form-select-sm ms-2" id="brand_filter">
                                             <option value="" selected>All Brands</option>
                                             @foreach (App\Models\Brand::all() as $brand)
-                                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                                <option value="{{ $brand->id }}" {{ (request('brand_filter') == $brand->id) ? 'selected' : '' }}>{{ $brand->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -126,7 +126,7 @@
                                         <select name="category_filter" class="form-select form-select-sm ms-2" id="category_filter">
                                             <option value="" selected>All Categories</option>
                                             @foreach (App\Models\Category::all() as $category)
-                                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                                                <option value="{{ $category->id }}" {{ (request('category_filter') == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -135,7 +135,7 @@
                                         <select name="product_filter" class="js-example-basic-single" id="product_filter">
                                             <option value="" selected>All Products</option>
                                             @foreach (App\Models\Product::all() as $product)
-                                                <option value="{{ $product->id }}">{{ $product->name }}</option>
+                                                <option value="{{ $product->id }}" {{ (request('product_filter') == $product->id) ? 'selected' : '' }}>{{ $product->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>

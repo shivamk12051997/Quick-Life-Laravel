@@ -5,6 +5,7 @@
                 <th>#</th>
                 <th>Name</th>
                 <th>Image</th>
+                <th>Is Featured</th>
                 <th>Status</th>
                 <th>Options</th>
             </tr>

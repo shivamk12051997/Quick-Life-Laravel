@@ -10,6 +10,7 @@
                 <th>Category</th>
                 <th>Price</th>
                 <th>Prescription</th>
+                <th>Is Featured</th>
                 <th>Status</th>
                 <th>Options</th>
             </tr>

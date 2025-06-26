@@ -56,8 +56,10 @@ class Product extends Model implements HasMedia
         'prescription_required',
         'mrp_price',
         'sale_price',
+        'tax_rate',
         'use_case',
         'description',
+        'is_featured',
         'status',
         'deleted_at',
     ];

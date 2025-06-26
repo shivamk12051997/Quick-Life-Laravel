@@ -9,6 +9,7 @@ use App\Models\SubCategory;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\ProductRequest;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Schema;
@@ -56,6 +57,9 @@ class ProductRequestController extends Controller
         if($request->sub_category_filter){
             $product_request = $product_request->where('sub_category_id', $request->sub_category_filter);
         }
+        if($request->status){
+            $product_request = $product_request->where('status', $request->status);
+        }
 
         $product_request = $product_request->orderBy('id','desc')->paginate($numbers);
 
@@ -66,8 +70,8 @@ class ProductRequestController extends Controller
     {
         // Step 1: Validate inputs
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:product_requests,name,' . $request->id,
-            'main_img' => 'nullable|image|mimes:png|max:2048',
+            'name' => 'required|string|max:255|'.Rule::unique('product_requests', 'name')->ignore($request->id)->whereNull('deleted_at').'|'.Rule::unique('products', 'name')->ignore($request->product_id)->whereNull('deleted_at'),
+            'main_img' => 'nullable|image|mimes:png,webp|max:2048',
         ]);
 
         // Step 2: If validation fails, return 422 JSON response

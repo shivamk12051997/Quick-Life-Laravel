@@ -2,6 +2,7 @@
     @csrf
     <input type="hidden" name="id" value="{{ $product_request->id ?? 0 }}">
     <input type="hidden" name="status" value="{{ $product_request->status ?? 'Pending' }}">
+    <input type="hidden" name="product_id" value="{{ $product_request->product_id ?? 0 }}">
     <div class="modal-header">
         <h4 class="modal-title" id="mySmallModalLabel">{{ ($product_request->id ?? 0) != 0 ? 'Edit':'Add' }} Product </h4>
         <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close" data-bs-original-title="" title=""></button>
