@@ -351,7 +351,7 @@
                         <div class="card-body pt-0">
                             <ul class="customer-details">
                                 <li>
-                                    <h6>Name </h6><span>{{ $order->f_name }} {{ $order->l_name }}</span>
+                                    <h6>Name </h6><span>{{ $order->name }}</span>
                                 </li>
                                 <li>
                                     <h6>Email Address:</h6><span>{{ $order->email ?? '-' }}</span>

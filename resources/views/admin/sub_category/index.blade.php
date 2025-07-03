@@ -20,11 +20,11 @@
                             @csrf
                             <input type="hidden" name="id" value="0">
                             <input type="hidden" name="status" value="1">
-                            <div class="col-md-3 form-group">
+                            <div class="col-md-5 form-group">
                                 <h6>Name <span>*</span></h6>
                                 <input type="text" class="form-control" name="name" id="" value="" required>
                             </div>
-                            <div class="col-md-3 form-group">
+                            <div class="col-md-5 form-group">
                                 <h6>Category <span>*</span></h6>
                                 <select name="category_id" id="" class="form-select js-example-basic-single" required>
                                     <option value="" disabled selected>Select Category...</option>
@@ -33,10 +33,10 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-3 form-group">
+                            {{-- <div class="col-md-3 form-group">
                                 <h6>Image <small>(Optional)</small></h6>
                                 <input type="file" class="form-control" name="main_img" id="" accept="image/*">
-                            </div>
+                            </div> --}}
                             <div class="col-auto form-group">
                                 <button class="btn btn-primary">Save</button>
                             </div>

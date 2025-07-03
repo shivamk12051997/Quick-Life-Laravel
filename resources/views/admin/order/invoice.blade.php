@@ -2678,7 +2678,7 @@ hr {
                         <div class="tm_invoice_left">
                             <p class="tm_mb2"><b class="tm_primary_color">Invoice To:</b></p>
                             <p>
-                                {{ $order->f_name }} , {{ $order->l_name }} <br>
+                                {{ $order->name }} <br>
                                 {{ $order->address_1 }} {{ $order->address_2 }} , {{ $order->city }} , {{ $order->state }} , {{ $order->country }}, {{ $order->pincode }} <br>
                                 {{ $order->email }}, {{ $order->phone }}
                             </p>

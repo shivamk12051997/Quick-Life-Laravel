@@ -20,6 +20,7 @@ class Cart extends Model
         'total_amount',
         'tax_rate',
         'tax_amount',
+        'prescription_required',
         'deleted_at',
     ];
     

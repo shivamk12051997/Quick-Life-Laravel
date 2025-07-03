@@ -273,6 +273,7 @@ class FrontController extends Controller
                     'total_amount' => $product->sale_price * ($request->input('qty') ?? 1),
                     'tax_rate' => $product->tax_rate,
                     'tax_amount' => ($product->sale_price * ($request->input('qty') ?? 1)) * ($product->tax_rate / 100),
+                    'prescription_required' => $product->prescription_required,
                 ]
             );
             return response()->json([

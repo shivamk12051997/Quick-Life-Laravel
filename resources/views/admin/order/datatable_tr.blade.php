@@ -1,6 +1,5 @@
 <td>{{ $item->order_no ?? '-' }}</td>
-<td>{{ $item->f_name ?? '-' }}</td>
-<td>{{ $item->l_name ?? '-' }}</td>
+<td>{{ $item->name ?? '-' }}</td>
 <td>{{ $item->email ?? '-' }}</td>
 <td>{{ $item->phone ?? '-' }}</td>
 <td>{{ $item->address_1 ?? '-' }} {{ $item->address_2 ?? '-' }}, {{ $item->city ?? '-' }}, {{ $item->state ?? '-' }} {{ $item->country ?? '-' }}</td>
