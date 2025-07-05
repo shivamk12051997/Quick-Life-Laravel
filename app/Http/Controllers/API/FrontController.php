@@ -422,6 +422,39 @@ class FrontController extends Controller
         ]);
     }
 
+    public function dashboard_data(Request $request)
+    {
+        if($customer = Auth::guard('sanctum')->user())
+        {
+            $total_orders = Order::where('customer_id', $customer->id)->count();
+            $processing_orders = Order::where('customer_id', $customer->id)->whereIn('order_status', ['Processing','Order Placed','Packed'])->count();
+            $shipped_orders = Order::where('customer_id', $customer->id)->where('order_status', 'Shipped')->count();
+            $delivered_orders = Order::where('customer_id', $customer->id)->where('order_status', 'Delivered')->count();
+            $latest_orders = Order::where('customer_id', $customer->id)->orderBy('created_at', 'desc')->take(10)->get();
+            $order_count = [
+                'total' => $total_orders,
+                'processing' => $processing_orders,
+                'shipped' => $shipped_orders,
+                'delivered' => $delivered_orders,
+            ];
+            return response()->json([
+                'message' => 'Dashboard data retrieved successfully',
+                'data' => [
+                    'order_count' => $order_count,
+                    'latest_orders' => $latest_orders,
+                ]
+            ])->setStatusCode(200, 'OK', [
+                'Content-Type' => 'application/json'
+            ]);
+        }
+        return response()->json([
+            'message' => 'Unauthorized',
+            'data' => []
+        ])->setStatusCode(401, 'Unauthorized', [
+            'Content-Type' => 'application/json'
+        ]);
+    }
+
     public function order_history(Request $request)
     {
         if($customer = Auth::guard('sanctum')->user())

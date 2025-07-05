@@ -15,6 +15,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/verify-login-otp', [AuthController::class, 'verify_login_otp']);
 Route::post('/resend-otp', [AuthController::class, 'resend_otp']);
 Route::post('/verify_token', [AuthController::class, 'verify_token']);
+Route::post('/warehouse/register', [AuthController::class, 'warehouse_register']);
 
 Route::get('/home', [FrontController::class, 'home']);
 Route::get('/products', [FrontController::class, 'products']);
@@ -34,6 +35,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/cart-items', [FrontController::class, 'cart_items']);
     Route::post('/remove-cart-item', [FrontController::class, 'remove_cart_item']);
     Route::post('/place-order', [FrontController::class, 'place_order']);
+    Route::get('/dashboard-data', [FrontController::class, 'dashboard_data']);
     Route::get('/order-history', [FrontController::class, 'order_history']);
     Route::get('/order-details/{order_no}', [FrontController::class, 'order_details']);
 

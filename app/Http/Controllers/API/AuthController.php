@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Customer;
+use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
@@ -167,6 +168,25 @@ class AuthController extends Controller
         }
 
         return response()->json(['message' => 'Token is valid', 'user' => $customer], 200);
+    }
+
+    public function warehouse_register(Request $request)
+    {
+        if ($warehouse = Warehouse::where('phone', $request->phone)->first()) {
+            return response()->json(['status' => 'error', 'message' => 'Warehouse already exists with this phone number'], 200);
+        }
+        // If validation passes, create the warehouse
+        $warehouse = Warehouse::create($request->all());
+
+        // dd($request->all());
+        if($request->hasFile('drug_license')) {
+            $warehouse->addMedia($request->file('drug_license'))->toMediaCollection('drug_license');
+        }
+        if($request->hasFile('gst_certificate')) {
+            $warehouse->addMedia($request->file('gst_certificate'))->toMediaCollection('gst_certificate');
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'Warehouse registered successfully', 'warehouse' => $warehouse], 200);
     }
 }
 
