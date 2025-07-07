@@ -17,7 +17,12 @@ class WarehouseMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         if(Auth::user()->role_as == 'Warehouse' || Auth::user()->role_as == 'Admin'){
-            return $next($request);
+            if(Auth::user()->status == '1'){
+                return $next($request);
+            }
+            else{
+                return redirect()->route('user.inactive_dashboard')->with('error','Access Denied as your account is not active');
+            }
         }else{
             return redirect()->route('home')->with('error','Access Denied as you are not a Warehouse');
         }

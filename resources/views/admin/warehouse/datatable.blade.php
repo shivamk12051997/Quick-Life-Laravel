@@ -3,10 +3,16 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Name</th>
+                <th>Owner Name</th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th>Location</th>
+                <th>Warehouse Name</th>
+                <th>Warehouse Address</th>
+                <th>Warehouse City</th>
+                <th>Warehouse State</th>
+                <th>Warehouse Pincode</th>
+                <th>Drug License Number</th>
+                <th>GST Number</th>
                 <th>Status</th>
                 <th>Options</th>
             </tr>

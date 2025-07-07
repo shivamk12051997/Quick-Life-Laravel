@@ -2,12 +2,16 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\User;
 use App\Models\Customer;
 use App\Models\Warehouse;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Mail\WarehouseRegisterMail;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -172,18 +176,33 @@ class AuthController extends Controller
 
     public function warehouse_register(Request $request)
     {
-        if ($warehouse = Warehouse::where('phone', $request->phone)->first()) {
-            return response()->json(['status' => 'error', 'message' => 'Warehouse already exists with this phone number'], 200);
+        if ($warehouse = User::where('phone', $request->phone)->first()) {
+            return response()->json(['status' => 'error', 'message' => 'Phone number already exists'], 200);
         }
+        if ($user = User::where('email', $request->email)->first()) {
+            return response()->json(['status' => 'error', 'message' => 'Email address already exists'], 200);
+        }
+        $input = $request->all();
+        $input['created_by_id'] = 0;
+        $input['status'] =  0;
+        $input['name'] =  $request->warehouse_name;
+        $input['password'] = Hash::make($request->phone);
+        $input['show_password'] = $request->phone;
+        
         // If validation passes, create the warehouse
-        $warehouse = Warehouse::create($request->all());
+        $user = User::create($input);
+        $user->email_verified_at = now();
+        $user->role_as = 'Warehouse';
+        $user->save();
+
+        Mail::to($user->email)->send(new WarehouseRegisterMail($user));
 
         // dd($request->all());
         if($request->hasFile('drug_license')) {
-            $warehouse->addMedia($request->file('drug_license'))->toMediaCollection('drug_license');
+            $user->addMedia($request->file('drug_license'))->toMediaCollection('drug_license');
         }
         if($request->hasFile('gst_certificate')) {
-            $warehouse->addMedia($request->file('gst_certificate'))->toMediaCollection('gst_certificate');
+            $user->addMedia($request->file('gst_certificate'))->toMediaCollection('gst_certificate');
         }
 
         return response()->json(['status' => 'success', 'message' => 'Warehouse registered successfully', 'warehouse' => $warehouse], 200);

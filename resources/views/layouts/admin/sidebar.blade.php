@@ -101,11 +101,11 @@
               <li><a href="#">All Shifted Orders</a></li>
             </ul>
           </li>
-          <li class="sidebar-list">
+          {{-- <li class="sidebar-list">
             <a class="sidebar-link sidebar-title link-nav" href="#">
               <i data-feather="shopping-cart"></i><span>All Abandoned Cart</span>
             </a>
-          </li>
+          </li> --}}
           <li class="sidebar-main-title">
             <div>
               <h6>Payment Management</h6>
@@ -126,6 +126,7 @@
               <li><a href="#">All Pending to Send Payments</a></li>
             </ul>
           </li>
+          @if (Auth::user()->role_as == 'Admin')
           <li class="sidebar-main-title">
             <div>
               <h6>Doctor Management</h6>
@@ -156,6 +157,7 @@
               <li><a href="#">All Consultations Recorded</a></li>
             </ul>
           </li>
+          @endif
           @if (Auth::user()->role_as == 'Admin')
           <li class="sidebar-main-title">
             <div>

@@ -6,8 +6,10 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Mail\WarehouseStatusChangedMail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Validator;
 
@@ -81,13 +83,17 @@ class WarehouseController extends Controller
             }
             $item->save();
 
-            if($request->hasFile('main_img')) {
-                // Delete old main image if exists
-                if ($item->getFirstMedia('main_img')) {
-                    $item->getFirstMedia('main_img')->delete();
+            if($request->hasFile('drug_license')) {
+                if ($item->getFirstMedia('drug_license')) {
+                    $item->getFirstMedia('drug_license')->delete();
                 }
-                $item->addMedia($request->file('main_img'))->toMediaCollection('main_img');
-                // Reload the item to get the latest media
+                $item->addMedia($request->file('drug_license'))->toMediaCollection('drug_license');
+            }
+            if($request->hasFile('gst_certificate')) {
+                if ($item->getFirstMedia('gst_certificate')) {
+                    $item->getFirstMedia('gst_certificate')->delete();
+                }
+                $item->addMedia($request->file('gst_certificate'))->toMediaCollection('gst_certificate');
             }
 
             // Step 4: Return success response with 200
@@ -119,16 +125,51 @@ class WarehouseController extends Controller
         return ['message' => ' User Deleted Successfully'];
     }
 
-    public function status($id)
+    public function change_status(Request $request)
     {
-        $warehouse = User::find($id);
-        if($warehouse->status == 1){
-            $warehouse->status = 0;
-        }else{
-            $warehouse->status = 1;
-        }
-        $warehouse->save();
+        $warehouse = User::find($request->id);
+        return view('admin.warehouse.change_status', compact('warehouse'));
+    }
 
-        return $warehouse->status;
+    public function change_status_store(Request $request)
+    {
+        // Step 1: Validate inputs
+        $validator = Validator::make($request->all(), [
+            'status' => 'required|string|max:255',
+        ]);
+
+        // Step 2: If validation fails, return 422 JSON response
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation Error',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        // try {
+            // Step 3: Save or update your data
+            $input = $request->all();
+
+            $input['status'] = $request->status ?? 0;
+
+            $item = User::updateOrCreate(['id' => $input['id']],$input);
+
+            Mail::to($item->email)->send(new WarehouseStatusChangedMail($item));
+
+            // Step 4: Return success response with 200
+
+            return response()->json([
+                'id' => $item->id,
+                'html' => view('admin.warehouse.datatable_tr', compact('item'))->render(),
+                'message' => 'Warehouse Status Changed Successfully',
+            ], 200);
+
+        // } catch (\Exception $e) {
+        //     // Step 5: Handle unexpected errors
+        //     return response()->json([
+        //         'message' => 'Something went wrong!',
+        //         'error' => $e->getMessage()
+        //     ], 500);
+        // }
     }
 }

@@ -9,44 +9,15 @@
 @section('breadcrumb-items')
     <li class="breadcrumb-item">Master Fields</li>
 @endsection
+@section('btns')
+    <a href="#" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal(0)">Add Warehouse</a>
+@endsection
 
 @section('content')
     <div class="container-fluid">
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <form class="row align-items-end" action="{{ route('admin.warehouse.store') }}" method="post" enctype="multipart/form-data">
-                            @csrf
-                            <input type="hidden" name="id" value="0">
-                            <input type="hidden" name="status" value="1">
-                            <div class="col-md-4 form-group">
-                                <h6>Name <span>*</span></h6>
-                                <input type="text" class="form-control" name="name" id="" value="" required>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <h6>Email <span>*</span></h6>
-                                <input type="email" class="form-control" name="email" id="" value="" required>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <h6>Password <span>*</span></h6>
-                                <input type="text" class="form-control" name="password" id="" value="" required>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <h6>Phone Number <span>*</span></h6>
-                                <input type="text" class="form-control" name="phone" id="" value="" required>
-                            </div>
-                            <div class="col-md-4 form-group">
-                                <h6>Location <span>*</span></h6>
-                                <input type="text" class="form-control" name="location" id="" value="" required>
-                            </div>
-                            <div class="col-auto form-group">
-                                <button class="btn btn-primary">Save</button>
-                            </div>
-                        </form>
-                        {{-- <h4 class="card-title">All Shop By Body Part</h4>
-                        <a href="#" class="btn btn-primary ms-auto col-auto" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal(0)">Add Shop By Body Part</a> --}}
-                    </div>
                     <div class="card-body">
                         <div class="dt-ext ">
                             <div id="datatable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer" onchange="get_datatable()">
@@ -120,24 +91,17 @@
             $('#ajax_html').html('<div class="loader-box"><div class="loader-37"></div></div>');
             $.get('{{ route('admin.warehouse.edit') }}', { id:id }, function(data){
                 $('#ajax_html').removeClass();
-                $('#ajax_html').addClass('modal-dialog');
+                $('#ajax_html').addClass('modal-dialog modal-lg');
                 $('#ajax_html').html(data);
             });
         }
 
         function change_status(id){
-            $('#status_'+id).html('<div class="spinner-border spinner-border-sm text-light"></div>');
-            $.get('{{ url('admin/warehouse/status') }}/'+id, function(data){
-                $.notify({ title:'Success', message:'Status Changed Successfully' }, { type:'success', });
-                if(data == 1){
-                    $('#status_'+id).addClass('badge-success');
-                    $('#status_'+id).removeClass('badge-danger');
-                    $('#status_'+id).text('Active');
-                }else{
-                    $('#status_'+id).addClass('badge-danger');
-                    $('#status_'+id).removeClass('badge-success');
-                    $('#status_'+id).text('Inactive');
-                }
+            $('#ajax_html').html('<div class="loader-box"><div class="loader-37"></div></div>');
+            $.get('{{ url('admin/warehouse/change_status') }}', { id:id }, function(data){
+                $('#ajax_html').removeClass();
+                $('#ajax_html').addClass('modal-dialog');
+                $('#ajax_html').html(data);
             });
         }
 

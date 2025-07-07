@@ -81,7 +81,8 @@ Route::group(['middleware' => ['auth','is_Admin'], 'prefix' => 'admin'], functio
     Route::post('warehouse/store', [WarehouseController::class, 'store'])->name('admin.warehouse.store');
     Route::get('warehouse/edit', [WarehouseController::class, 'edit'])->name('admin.warehouse.edit');
     Route::get('warehouse/delete/{id}', [WarehouseController::class, 'delete'])->name('admin.warehouse.delete');
-    Route::get('warehouse/status/{id}', [WarehouseController::class, 'status'])->name('admin.warehouse.status');
+    Route::get('warehouse/change_status', [WarehouseController::class, 'change_status'])->name('admin.warehouse.change_status');
+    Route::post('warehouse/change_status_store', [WarehouseController::class, 'change_status_store'])->name('admin.warehouse.change_status_store');
 });
 
 Route::group(['middleware' => ['auth','is_Warehouse'], 'prefix' => 'warehouse'], function () {
@@ -128,5 +129,5 @@ Route::group(['middleware' => ['auth','is_Warehouse'], 'prefix' => 'warehouse'],
 Route::group(['middleware' => ['auth','is_User'], 'prefix' => 'user'], function () {
     
     // Product
-    Route::get('dashboard', [UserDashboardController::class, 'index'])->name('user.dashboard');
+    Route::get('inactive_dashboard', [UserDashboardController::class, 'inactive_dashboard'])->name('user.inactive_dashboard');
 });
