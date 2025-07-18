@@ -185,7 +185,7 @@ var optionssubscriber = {
             top: 8,
             left: 0,
             blur: 2,
-            color: ["#FFA941","#7366FF"],
+            color: ["#FFA941","#06a9b2"],
             opacity: 0.1
         }
     },
@@ -198,7 +198,7 @@ var optionssubscriber = {
             }
         }, 
     },
-    colors: ["#FFA941","#7366FF"],
+    colors: ["#FFA941","#06a9b2"],
     stroke: {
         width: 2,
         curve: 'smooth',
@@ -876,7 +876,7 @@ var optionsview = {
             y: 44,
             marker: {
               size: 15,
-              fillColor: '#7366FF',
+              fillColor: '#06a9b2',
               strokeColor: 'var(--view-border-marker)',
               strokeWidth: 20,
               radius: 2,
@@ -922,7 +922,7 @@ var optionsview = {
                 y: 44,
                 marker: {
                   size: 10,
-                  fillColor: '#7366FF',
+                  fillColor: '#06a9b2',
                   strokeColor: '#cfcdfc',
                   strokeWidth: 7,
                   radius: 2,

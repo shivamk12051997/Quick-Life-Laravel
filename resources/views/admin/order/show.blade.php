@@ -56,7 +56,7 @@
         .track-order-details #order-status-timeline .status-bar.progress:after {
         content: "";
         position: absolute;
-        background-color: #7366ff;
+        background-color: #06a9b2;
         height: 100%;
         }
         .track-order-details #order-status-timeline .main-status-line ul {
@@ -68,8 +68,8 @@
         width: 22%;
         }
         .track-order-details #order-status-timeline .main-status-line ul li .order-process.active {
-        border-color: #7366ff;
-        background-color: #7366ff;
+        border-color: #06a9b2;
+        background-color: #06a9b2;
         color: #fff;
         }
         .track-order-details #order-status-timeline .main-status-line ul li .order-process {

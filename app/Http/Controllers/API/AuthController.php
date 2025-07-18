@@ -35,7 +35,7 @@ class AuthController extends Controller
             'phone' => $request->phone,
             'otp' => rand(100000, 999999), // Generate a random OTP
             'otp_expires_at' => now()->addMinutes(10), // Set OTP expiration time
-            'status' => 'Inactive', // Set initial status
+            'status' => 'Active', // Set initial status
         ]);
 
         $response = [

@@ -21,7 +21,7 @@ class Product extends Model implements HasMedia
               ->format('webp'); // Ensure the format is set to .webp
     }
 
-    protected $appends = ['image_url', 'thumb_url', 'gallery_urls'];
+    protected $appends = ['image_url', 'thumb_url', 'gallery_urls', 'current_stock'];
 
     public function getImageUrlAttribute()
     {
@@ -41,6 +41,14 @@ class Product extends Model implements HasMedia
             return $media->getUrl();
         })->toArray();
     }
+
+    public function getCurrentStockAttribute()
+    {
+        $in =  $this->stock_details()->where('in_out', 'In')->sum('qty');
+        $out =  $this->stock_details()->where('in_out', 'Out')->sum('qty');
+        return $in - $out;
+    }
+
 
     use SoftDeletes;
     protected $fillable = [
@@ -64,8 +72,6 @@ class Product extends Model implements HasMedia
         'deleted_at',
     ];
 
-    
-    
     public function brand()
     {
         return $this->belongsTo('App\Models\Brand', 'brand_id', 'id');
@@ -78,5 +84,10 @@ class Product extends Model implements HasMedia
     {
         return $this->belongsTo('App\Models\SubCategory', 'sub_category_id', 'id');
     }
+    public function stock_details()
+    {
+        return $this->hasMany('App\Models\StockDetails', 'product_id', 'id');
+    }
     
+
 }

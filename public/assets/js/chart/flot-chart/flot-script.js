@@ -395,7 +395,7 @@ $(function() {
             {color: "#f73164", points: data1_points, data: data1, label: "data1"},
             {color: "#a927f9",  points: data2_points, data: data2, label: "data2"},
             {color: "#f8d62b", lines: {show: true}, points: data3_points, data: data3, label: "data3"},
-            {color: "#7366ff", bars: {show: true, align: "center", barWidth: 0.25}, data: data4, label: "data4"},
+            {color: "#06a9b2", bars: {show: true, align: "center", barWidth: 0.25}, data: data4, label: "data4"},
             {color: "#51bb25", points: data3_points, data: data4_errors}
             ];
 

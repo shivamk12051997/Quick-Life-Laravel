@@ -251,7 +251,7 @@ function drawBasic() {
                 ["Copper", 10, "#a927f9"],
                 ["Silver", 12, "#f8d62b"],
                 ["Gold", 14, "#f73164"],
-                ["Platinum", 16, "color: #7366ff"]
+                ["Platinum", 16, "color: #06a9b2"]
             ]),
             d = new google.visualization.DataView(a);
         d.setColumns([0, 1, {

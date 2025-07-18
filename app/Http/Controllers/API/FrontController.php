@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\API;
 
 use App\Models\Cart;
+use App\Models\User;
 use App\Models\Brand;
 use App\Models\Order;
 use App\Models\Address;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\ContactForm;
 use App\Models\SubCategory;
 use App\Models\OrderDetails;
+use App\Models\StockDetails;
 use Illuminate\Http\Request;
+use App\Models\SubscribeForm;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -21,6 +25,7 @@ class FrontController extends Controller
     {
         
         return response()->json([
+            'status' => 'success',
             'message' => 'Welcome to the API Home',
             'data' => []
         ]);
@@ -28,7 +33,17 @@ class FrontController extends Controller
 
     function products(Request $request)
     {
-        $products = Product::where('status', 1);
+        if($request->header('pincode')){
+            $products = Product::where('status', 1)
+                ->whereHas('stock_details', function ($query) use ($request) {
+                    $query->whereHas('warehouse', function ($query) use ($request) {
+                        $query->where('pincode', $request->header('pincode'))
+                            ->where('status', 1);
+                    });
+                });
+        }else{
+            $products = Product::where('status', 1);
+        }
 
         if ($request->category_id) {
             $products = $products->where('category_id', $request->input('category_id'));
@@ -80,6 +95,7 @@ class FrontController extends Controller
         
 
         return response()->json([
+            'status' => 'success',
             'message' => 'List of products',
             'data' => $products
         ])->setStatusCode(200, 'OK', [
@@ -87,10 +103,23 @@ class FrontController extends Controller
         ]);
     }
 
-    function product_show($slug)
+    function product_show(Request $request, $slug)
     {
-        $product = Product::where('status', 1)->where('slug', $slug)->with('brand')->with('category')->with('sub_category')->first();
+        if($request->header('pincode')){
+            $product = Product::where('status', 1)
+                ->whereHas('stock_details', function ($query) use ($request) {
+                    $query->whereHas('warehouse', function ($query) use ($request) {
+                        $query->where('pincode', $request->header('pincode'))
+                            ->where('status', 1);
+                    });
+                });
+        } else {
+            $product = Product::where('status', 1);
+        }
+        
+        $product = $product->where('slug', $slug)->with('brand')->with('category')->with('sub_category')->first();
         return response()->json([
+            'status' => 'success',
             'message' => 'Product details',
             'data' => $product ? $product : 'Product not found'
         ])->setStatusCode($product ? 200 : 404, $product ? 'OK' : 'Not Found', [
@@ -136,15 +165,17 @@ class FrontController extends Controller
         }
         if ($brands->isEmpty()) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'No brands found',
                 'data' => []
-            ])->setStatusCode(404, 'Not Found', [
+            ])->setStatusCode(200, 'Not Found', [
                 'Content-Type' => 'application/json'
             ]);
         }
        
       
         return response()->json([
+            'status' => 'success',
             'message' => 'List of brands',
             'data' => $brands,
         ])->setStatusCode(200, 'OK', [
@@ -196,6 +227,7 @@ class FrontController extends Controller
             $categories = $categories->get();
         }
         return response()->json([
+            'status' => 'success',
             'message' => 'List of categories',
             'data' => $categories
         ])->setStatusCode(200, 'OK', [
@@ -206,6 +238,7 @@ class FrontController extends Controller
     {
         $sub_categories = SubCategory::where('status', 1)->orderBy('created_at', 'desc')->get();
         return response()->json([
+            'status' => 'success',
             'message' => 'List of sub categories',
             'data' => $sub_categories
         ])->setStatusCode(200, 'OK', [
@@ -217,6 +250,7 @@ class FrontController extends Controller
         $category = Category::where('id', $id)->where('status', 1)->first();
         if (!$category) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Category not found',
                 'data' => []
             ])->setStatusCode(404, 'Not Found', [
@@ -227,6 +261,7 @@ class FrontController extends Controller
         $products = $category->products()->where('status', 1)->orderBy('created_at', 'desc')->paginate($request->input('per_page', 30));
         if ($products->isEmpty()) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'No products found in this category',
                 'data' => []
             ])->setStatusCode(404, 'Not Found', [
@@ -234,6 +269,7 @@ class FrontController extends Controller
             ]);
         }
         return response()->json([
+            'status' => 'success',
             'message' => 'List of products in category: ' . $category->name,
             'data' => $products
         ])->setStatusCode(200, 'OK', [
@@ -249,6 +285,7 @@ class FrontController extends Controller
         ]);
         if ($validator->fails()) {
             return response()->json([
+                'status' => 'error',
                 'message' => 'Validation failed',
                 'errors' => $validator->errors()
             ])->setStatusCode(422, 'Unprocessable Entity', [
@@ -277,6 +314,7 @@ class FrontController extends Controller
                 ]
             );
             return response()->json([
+                'status' => 'success',
                 'message' => 'Product added to cart successfully',
                 'data' => $cart
             ])->setStatusCode(200, 'OK', [
@@ -293,6 +331,7 @@ class FrontController extends Controller
                 ->with(['product', 'category', 'sub_category', 'brand'])
                 ->get();
             return response()->json([
+                'status' => 'success',
                 'message' => 'Cart items retrieved successfully',
                 'data' => $cartItems
             ])->setStatusCode(200, 'OK', [
@@ -300,6 +339,7 @@ class FrontController extends Controller
             ]);
         }
         return response()->json([
+            'status' => 'error',
             'message' => 'Unauthorized',
             'data' => []
         ])->setStatusCode(401, 'Unauthorized', [
@@ -316,6 +356,7 @@ class FrontController extends Controller
                 ->first();
             if (!$cartItem) {
                 return response()->json([
+                    'status' => 'error',
                     'message' => 'Cart item not found',
                     'data' => []
                 ])->setStatusCode(404, 'Not Found', [
@@ -324,6 +365,7 @@ class FrontController extends Controller
             }
             $cartItem->delete();
             return response()->json([
+                'status' => 'success',
                 'message' => 'Cart item removed successfully',
                 'data' => []
             ])->setStatusCode(200, 'OK', [
@@ -331,6 +373,7 @@ class FrontController extends Controller
             ]);
         }
         return response()->json([
+            'status' => 'error',
             'message' => 'Unauthorized',
             'data' => []
         ])->setStatusCode(401, 'Unauthorized', [
@@ -344,6 +387,7 @@ class FrontController extends Controller
             $cartItems = Cart::where('customer_id', $customer->id)->get();
             if ($cartItems->isEmpty()) {
                 return response()->json([
+                    'status' => 'error',
                     'message' => 'Cart is empty',
                     'data' => []
                 ])->setStatusCode(400, 'Bad Request', [
@@ -364,6 +408,7 @@ class FrontController extends Controller
                 $input['pincode'] = $address->pincode;
             } else {
                 return response()->json([
+                    'status' => 'error',
                     'message' => 'Address not found',
                     'data' => []
                 ])->setStatusCode(404, 'Not Found', [
@@ -406,6 +451,7 @@ class FrontController extends Controller
             }
             Cart::where('customer_id', $customer->id)->delete();
             return response()->json([
+                'status' => 'success',
                 'message' => 'Checkout successful',
                 'data' => [
                     'order' => $order
@@ -415,6 +461,7 @@ class FrontController extends Controller
             ]);
         }
         return response()->json([
+            'status' => 'error',
             'message' => 'Unauthorized',
             'data' => []
         ])->setStatusCode(401, 'Unauthorized', [
@@ -432,12 +479,13 @@ class FrontController extends Controller
             $delivered_orders = Order::where('customer_id', $customer->id)->where('order_status', 'Delivered')->count();
             $latest_orders = Order::where('customer_id', $customer->id)->orderBy('created_at', 'desc')->take(10)->get();
             $order_count = [
-                'total' => $total_orders,
-                'processing' => $processing_orders,
-                'shipped' => $shipped_orders,
-                'delivered' => $delivered_orders,
+                'total_orders' => $total_orders,
+                'processing_orders' => $processing_orders,
+                'shipped_orders' => $shipped_orders,
+                'delivered_orders' => $delivered_orders,
             ];
             return response()->json([
+                'status' => 'success',
                 'message' => 'Dashboard data retrieved successfully',
                 'data' => [
                     'order_count' => $order_count,
@@ -448,6 +496,7 @@ class FrontController extends Controller
             ]);
         }
         return response()->json([
+            'status' => 'error',
             'message' => 'Unauthorized',
             'data' => []
         ])->setStatusCode(401, 'Unauthorized', [
@@ -461,6 +510,7 @@ class FrontController extends Controller
         {
             $orders = Order::where('customer_id', $customer->id)->with(['order_details.product', 'order_details.category', 'order_details.sub_category', 'order_details.brand'])->orderBy('created_at', 'desc')->paginate(10);
             return response()->json([
+                'status' => 'success',
                 'message' => 'Order history retrieved successfully',
                 'data' => $orders
             ])->setStatusCode(200, 'OK', [
@@ -468,6 +518,7 @@ class FrontController extends Controller
             ]);
         }
         return response()->json([
+            'status' => 'error',
             'message' => 'Unauthorized',
             'data' => []
         ])->setStatusCode(401, 'Unauthorized', [
@@ -482,6 +533,7 @@ class FrontController extends Controller
             $order = Order::where('order_no', $order_no)->with('order_details')->where('customer_id', $customer->id)->first();
             if (!$order) {
                 return response()->json([
+                    'status' => 'error',
                     'message' => 'Order not found',
                     'data' => []
                 ])->setStatusCode(404, 'Not Found', [
@@ -489,6 +541,7 @@ class FrontController extends Controller
                 ]);
             }
             return response()->json([
+                'status' => 'success',
                 'message' => 'Order details retrieved successfully',
                 'data' => $order
             ])->setStatusCode(200, 'OK', [
@@ -496,6 +549,7 @@ class FrontController extends Controller
             ]);
         }
         return response()->json([
+            'status' => 'error',
             'message' => 'Unauthorized',
             'data' => []
         ])->setStatusCode(401, 'Unauthorized', [
@@ -534,6 +588,7 @@ class FrontController extends Controller
                 ]
             );
             return response()->json([
+                'status' => 'success',
                 'message' => 'Address stored successfully',
                 'data' => $address
             ])->setStatusCode(200, 'OK', [
@@ -542,6 +597,7 @@ class FrontController extends Controller
         }
         
         return response()->json([
+            'status' => 'error',
             'message' => 'Unauthorized',
             'data' => []
         ])->setStatusCode(401, 'Unauthorized', [
@@ -554,6 +610,7 @@ class FrontController extends Controller
         {
             $addresses = Address::where('customer_id', $customer->id)->get();
             return response()->json([
+                'status' => 'success',
                 'message' => 'Addresses retrieved successfully',
                 'data' => $addresses
             ])->setStatusCode(200, 'OK', [
@@ -561,6 +618,7 @@ class FrontController extends Controller
             ]);
         }
         return response()->json([
+            'status' => 'error',
             'message' => 'Unauthorized',
             'data' => []
         ])->setStatusCode(401, 'Unauthorized', [
@@ -573,6 +631,7 @@ class FrontController extends Controller
         {
             $address = Address::where('id', $id)->where('customer_id', $customer->id)->first();
             return response()->json([
+                'status' => 'success',
                 'message' => 'Address retrieved successfully',
                 'data' => $address ? $address : 'Address not found'
             ])->setStatusCode($address ? 200 : 404, $address ? 'OK' : 'Not Found', [
@@ -581,11 +640,84 @@ class FrontController extends Controller
         }
         
         return response()->json([
+            'status' => 'error',
             'message' => 'Unauthorized',
             'data' => []
         ])->setStatusCode(401, 'Unauthorized', [
             'Content-Type' => 'application/json'
         ]);
     }
-    
+    public function store_availability($pincode)
+    {
+        $warehouse = User::where('pincode', $pincode)->where('role_as', 'Warehouse')->first();
+        if($warehouse) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Store availability retrieved successfully',
+                'data' => $warehouse
+            ])->setStatusCode(200, 'OK', [
+                'Content-Type' => 'application/json'
+            ]);
+        }
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Store not found',
+            'data' => []
+        ])->setStatusCode(200, 'Not Found', [
+            'Content-Type' => 'application/json'
+        ]);
+    }
+
+    public function subscribe_store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        }
+
+        $subscribe_form = SubscribeForm::updateOrCreate(
+            [
+                'email' => $request->input('email'),
+            ],
+            [
+                'status' => 1, // Assuming you want to set the status to active
+            ]
+        );
+
+        // Here you would typically save the subscription to the database
+        // For this example, we'll just return a success message
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Subscription successful',
+            'data' => $request->only('email')
+        ], 200);
+    }
+
+    public function contact_store(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Validation failed', 'errors' => $validator->errors()], 422);
+        }
+
+        $input = $request->only('name', 'email', 'subject', 'message');
+        ContactForm::create($input);
+
+        // Here you would typically send the contact message to the store
+        // For this example, we'll just return a success message
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Contact message sent successfully',
+            'data' => $request->only('name', 'email', 'subject', 'message')
+        ], 200);
+    }
 }

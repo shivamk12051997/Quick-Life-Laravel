@@ -28,6 +28,11 @@ Route::get('/sub_categories/{slug}', [FrontController::class, 'sub_categories'])
 Route::post('/store-address', [FrontController::class, 'store_address']);
 Route::get('/get-addresses', [FrontController::class, 'get_addresses']);
 Route::get('/get-address/{id}', [FrontController::class, 'get_address']);
+Route::get('/store-availability/{pincode}', [FrontController::class, 'store_availability']);
+
+Route::post('/subscribe-store', [FrontController::class, 'subscribe_store']);
+Route::post('/contact-store', [FrontController::class, 'contact_store']);
+
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     

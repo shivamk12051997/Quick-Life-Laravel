@@ -130,7 +130,7 @@ var options1 = {
       shade: 'light',
       type: 'horizontal',
       shadeIntensity: 1,
-      gradientToColors: ['#a26cf8', '#a927f9', '#7366ff'],
+      gradientToColors: ['#a26cf8', '#a927f9', '#06a9b2'],
       opacityFrom: [1, 0.4, 0.25],
       opacityTo: [1, 0.4, 0.25],
       stops: [30, 100],
@@ -328,7 +328,7 @@ var options3 = {
       fill: {
         type: 'gradient',
         gradient: {
-          colorFrom: '#7366ff',
+          colorFrom: '#06a9b2',
           colorTo: '#c481ec',
           stops: [0, 100],
           opacityFrom: 0.4,

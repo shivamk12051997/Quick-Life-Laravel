@@ -393,7 +393,7 @@ plotOptions: {
     },
   }
 },
-colors: ["#54BA4A", "#FFA539", "#7366FF"],
+colors: ["#54BA4A", "#FFA539", "#06a9b2"],
 labels: ['USD', 'BTC', 'ETH'],
 fill: {
    type: 'gradient',
