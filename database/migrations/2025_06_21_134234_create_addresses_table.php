@@ -22,7 +22,11 @@ return new class extends Migration
             $table->string('state')->nullable();
             $table->string('country')->nullable();
             $table->string('pincode')->nullable();
-            $table->string('deleted_at')->nullable();
+            $table->string('landmark')->nullable();
+            $table->string('latitude')->nullable();
+            $table->string('longitude')->nullable();
+            $table->string('address_type')->nullable();
+            $table->softDeletes(); // This will create a 'deleted_at' column
             $table->timestamps();
         });
     }

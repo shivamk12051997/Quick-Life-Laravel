@@ -474,7 +474,7 @@ class FrontController extends Controller
         if($customer = Auth::guard('sanctum')->user())
         {
             $total_orders = Order::where('customer_id', $customer->id)->count();
-            $processing_orders = Order::where('customer_id', $customer->id)->whereIn('order_status', ['Processing','Order Placed','Packed'])->count();
+            $processing_orders = Order::where('customer_id', $customer->id)->whereIn('order_status', ['Pending','Processing','Order Placed','Packed'])->count();
             $shipped_orders = Order::where('customer_id', $customer->id)->where('order_status', 'Shipped')->count();
             $delivered_orders = Order::where('customer_id', $customer->id)->where('order_status', 'Delivered')->count();
             $latest_orders = Order::where('customer_id', $customer->id)->orderBy('created_at', 'desc')->take(10)->get();
@@ -508,7 +508,18 @@ class FrontController extends Controller
     {
         if($customer = Auth::guard('sanctum')->user())
         {
-            $orders = Order::where('customer_id', $customer->id)->with(['order_details.product', 'order_details.category', 'order_details.sub_category', 'order_details.brand'])->orderBy('created_at', 'desc')->paginate(10);
+            $orders = Order::where('customer_id', $customer->id);
+
+            if($request->search){
+                $search = $request->input('search');
+                $orders = $orders->where(function ($query) use ($search) {
+                    $query->where('order_no', 'LIKE', "%{$search}%")
+                          ->orWhere('name', 'LIKE', "%{$search}%")
+                          ->orWhere('phone', 'LIKE', "%{$search}%");
+                });
+            }
+
+            $orders =  $orders->with(['order_details.product', 'order_details.category', 'order_details.sub_category', 'order_details.brand'])->orderBy('created_at', 'desc')->paginate($request->per_page ??10);
             return response()->json([
                 'status' => 'success',
                 'message' => 'Order history retrieved successfully',
@@ -566,10 +577,15 @@ class FrontController extends Controller
                 'phone' => 'required|string',
                 'address_1' => 'required|string|max:255',
                 'address_2' => 'nullable|string|max:255',
+                'landmark' => 'nullable|string|max:255',
                 'city' => 'required|string|max:100',
                 'state' => 'required|string|max:100',
                 'country' => 'required|string|max:100',
-                'pincode' => 'required|string|max:10',
+                'pincode' => 'required|string|max:255',
+                'latitude' => 'required|max:255',
+                'longitude' => 'nullable|max:255',
+                'map_full_address' => 'nullable|string|max:255',
+                'address_type' => 'nullable|string|max:255',
             ]);
             $address = Address::updateOrCreate(
                 [
@@ -581,10 +597,15 @@ class FrontController extends Controller
                     'phone' => $request->input('phone'),
                     'address_1' => $request->input('address_1'),
                     'address_2' => $request->input('address_2'),
+                    'landmark' => $request->input('landmark'),
                     'city' => $request->input('city'),
                     'state' => $request->input('state'),
                     'country' => $request->input('country'),
-                    'pincode' => $request->input('pincode')
+                    'pincode' => $request->input('pincode'),
+                    'latitude' => $request->input('latitude'),
+                    'longitude' => $request->input('longitude'),
+                    'map_full_address' => $request->input('map_full_address'),
+                    'address_type' => $request->input('address_type')
                 ]
             );
             return response()->json([

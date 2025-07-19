@@ -18,6 +18,11 @@ class Address extends Model
         'state',
         'country',
         'pincode',
+        'landmark',
+        'latitude',
+        'longitude',
+        'map_full_address',
+        'address_type',
         'deleted_at',
     ];
 
