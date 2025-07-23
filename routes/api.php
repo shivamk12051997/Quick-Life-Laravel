@@ -33,6 +33,10 @@ Route::get('/store-availability/{pincode}', [FrontController::class, 'store_avai
 Route::post('/subscribe-store', [FrontController::class, 'subscribe_store']);
 Route::post('/contact-store', [FrontController::class, 'contact_store']);
 
+Route::get('/blogs', [FrontController::class, 'blogs']);
+Route::get('/blog/{slug}', [FrontController::class, 'blog_show']);
+Route::get('/policies', [FrontController::class, 'policies']);
+Route::get('/policy/{slug}', [FrontController::class, 'policy_show']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
     

@@ -182,6 +182,27 @@
 
           <li class="sidebar-main-title">
             <div>
+              <h6>Blog Management</h6>
+            </div>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('admin.blog.index') }}">
+              <i data-feather="home"></i><span>All Blogs</span>
+            </a>
+          </li>
+          <li class="sidebar-main-title">
+            <div>
+              <h6>Policy Management</h6>
+            </div>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('admin.policy.index') }}">
+              <i data-feather="home"></i><span>All Policys</span>
+            </a>
+          </li>
+
+          <li class="sidebar-main-title">
+            <div>
               <h6>Settings</h6>
             </div>
           </li>

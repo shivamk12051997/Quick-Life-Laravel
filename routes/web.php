@@ -4,12 +4,16 @@ use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AjaxController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\WebsiteController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\WarehouseController;
+use App\Http\Controllers\Warehouse\OrderController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\User\UserDashboardController;
 use App\Http\Controllers\Admin\AdminDashboardController;
@@ -17,7 +21,6 @@ use App\Http\Controllers\Warehouse\CurrentStockController;
 use App\Http\Controllers\Warehouse\StockDetailsController;
 use App\Http\Controllers\Warehouse\ProductRequestController;
 use App\Http\Controllers\Warehouse\WarehouseDashboardController;
-use App\Http\Controllers\Warehouse\OrderController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -83,6 +86,22 @@ Route::group(['middleware' => ['auth','is_Admin'], 'prefix' => 'admin'], functio
     Route::get('warehouse/delete/{id}', [WarehouseController::class, 'delete'])->name('admin.warehouse.delete');
     Route::get('warehouse/change_status', [WarehouseController::class, 'change_status'])->name('admin.warehouse.change_status');
     Route::post('warehouse/change_status_store', [WarehouseController::class, 'change_status_store'])->name('admin.warehouse.change_status_store');
+
+    // Blog
+    Route::get('blog', [BlogController::class, 'index'])->name('admin.blog.index');
+    Route::get('blog/datatable', [BlogController::class, 'datatable'])->name('admin.blog.datatable');
+    Route::post('blog/store', [BlogController::class, 'store'])->name('admin.blog.store');
+    Route::get('blog/edit', [BlogController::class, 'edit'])->name('admin.blog.edit');
+    Route::get('blog/delete/{id}', [BlogController::class, 'delete'])->name('admin.blog.delete');
+    Route::get('blog/status/{id}', [BlogController::class, 'status'])->name('admin.blog.status');
+    // Policy
+    Route::get('policy', [PolicyController::class, 'index'])->name('admin.policy.index');
+    Route::get('policy/datatable', [PolicyController::class, 'datatable'])->name('admin.policy.datatable');
+    Route::post('policy/store', [PolicyController::class, 'store'])->name('admin.policy.store');
+    Route::get('policy/edit', [PolicyController::class, 'edit'])->name('admin.policy.edit');
+    Route::get('policy/delete/{id}', [PolicyController::class, 'delete'])->name('admin.policy.delete');
+    Route::get('policy/status/{id}', [PolicyController::class, 'status'])->name('admin.policy.status');
+
 });
 
 Route::group(['middleware' => ['auth','is_Warehouse'], 'prefix' => 'warehouse'], function () {

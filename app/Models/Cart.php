@@ -15,6 +15,7 @@ class Cart extends Model
         'category_id',
         'sub_category_id',
         'brand_id',
+        'pincode',
         'qty',
         'price',
         'total_amount',

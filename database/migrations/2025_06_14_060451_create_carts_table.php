@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('category_id')->nullable();
             $table->string('sub_category_id')->nullable();
             $table->string('brand_id')->nullable();
+            $table->string('pincode')->nullable();
             $table->string('qty')->nullable()->default(1);
             $table->string('price')->nullable()->default(1);
             $table->string('total_amount')->nullable()->default(1);

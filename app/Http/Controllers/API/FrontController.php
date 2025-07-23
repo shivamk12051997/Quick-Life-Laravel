@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Models\Blog;
 use App\Models\Cart;
 use App\Models\User;
 use App\Models\Brand;
 use App\Models\Order;
+use App\Models\Policy;
 use App\Models\Address;
 use App\Models\Product;
 use App\Models\Category;
@@ -294,12 +296,14 @@ class FrontController extends Controller
         }
         if($customer = Auth::guard('sanctum')->user())
         {
+            $pincode = $request->header('pincode');     
             $product = Product::find($request->input('product_id'));
             $cart = Cart::updateOrCreate(
                 [
                     'created_by_id' => $customer->id,
                     'customer_id' => $customer->id,
                     'product_id' => $request->input('product_id'),
+                    'pincode' => $pincode ?? null,
                 ],
                 [
                     'category_id' => $product->category_id,
@@ -519,7 +523,7 @@ class FrontController extends Controller
                 });
             }
 
-            $orders =  $orders->with(['order_details.product', 'order_details.category', 'order_details.sub_category', 'order_details.brand'])->orderBy('created_at', 'desc')->paginate($request->per_page ??10);
+            $orders =  $orders->with(['order_details.product', 'order_details.category', 'order_details.sub_category', 'order_details.brand'])->orderBy('created_at', 'desc')->paginate($request->per_page ?? 10);
             return response()->json([
                 'status' => 'success',
                 'message' => 'Order history retrieved successfully',
@@ -740,5 +744,56 @@ class FrontController extends Controller
             'message' => 'Contact message sent successfully',
             'data' => $request->only('name', 'email', 'subject', 'message')
         ], 200);
+    }
+
+    public function blogs(Request $request)
+    {
+        $blogs = Blog::where('status', 1)->latest()->paginate($request->per_page ?? 9);
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Blogs retrieved successfully',
+            'data' => $blogs
+        ], 200);
+    }
+    public function blog_show($slug)
+    {
+        $blog = Blog::where('slug', $slug)->where('status', 1)->first();
+        if ($blog) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Blog retrieved successfully',
+                'data' => $blog
+            ], 200);
+        }
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Blog not found',
+            'data' => []
+        ], 404);
+    }
+    public function policies(Request $request)
+    {
+        $policies = Policy::where('status', 1)->get();
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Policies retrieved successfully',
+            'data' => $policies
+        ], 200);
+    }
+    public function policy_show($slug)
+    {
+        $policy = Policy::where('slug', $slug)->where('status', 1)->first();
+        if ($policy) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Policy retrieved successfully',
+                'data' => $policy
+            ], 200);
+        }
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Blog not found',
+            'data' => []
+        ], 404);
     }
 }
