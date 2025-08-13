@@ -12,7 +12,7 @@
     <a href="#" class="text-warning p-1 f-22" data-toggle="tooltip" title="Edit" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $item->id }})">
         <i class="fa fa-edit"></i>
     </a>
-    <a onclick="delete_entry('{{ route('admin.brand.delete',$item->id)}}', {{ $item->id }})" class="text-danger pointer p-1 f-22" data-toggle="tooltip" title="Delete">
+    <a onclick="delete_entry('{{ route('admin.policy.delete',$item->id)}}', {{ $item->id }})" class="text-danger pointer p-1 f-22" data-toggle="tooltip" title="Delete">
         <i class="fa fa-trash-o"></i>
     </a>
 </td>
