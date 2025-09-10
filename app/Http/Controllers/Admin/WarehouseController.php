@@ -95,6 +95,43 @@ class WarehouseController extends Controller
                 }
                 $item->addMedia($request->file('gst_certificate'))->toMediaCollection('gst_certificate');
             }
+            if($request->hasFile('shop_establishment_certificate')) {
+                if ($item->getFirstMedia('shop_establishment_certificate')) {
+                    $item->getFirstMedia('shop_establishment_certificate')->delete();
+                }
+                $item->addMedia($request->file('shop_establishment_certificate'))->toMediaCollection('shop_establishment_certificate');
+            }
+            if($request->hasFile('pan_card')) {
+                if ($item->getFirstMedia('pan_card')) {
+                    $item->getFirstMedia('pan_card')->delete();
+                }
+                $item->addMedia($request->file('pan_card'))->toMediaCollection('pan_card');
+            }
+            if($request->hasFile('aadhaar_card')) {
+                if ($item->getFirstMedia('aadhaar_card')) {
+                    $item->getFirstMedia('aadhaar_card')->delete();
+                }
+                $item->addMedia($request->file('aadhaar_card'))->toMediaCollection('aadhaar_card');
+            }
+            if($request->hasFile('bank_account_details')) {
+                if ($item->getFirstMedia('bank_account_details')) {
+                    $item->getFirstMedia('bank_account_details')->delete();
+                }
+                $item->addMedia($request->file('bank_account_details'))->toMediaCollection('bank_account_details');
+            }
+            if($request->hasFile('storefront_photograph')) {
+                if ($item->getFirstMedia('storefront_photograph')) {
+                    $item->getFirstMedia('storefront_photograph')->delete();
+                }
+                $item->addMedia($request->file('storefront_photograph'))->toMediaCollection('storefront_photograph');
+            }
+            if($request->hasFile('owner_photograph')) {
+                if ($item->getFirstMedia('owner_photograph')) {
+                    $item->getFirstMedia('owner_photograph')->delete();
+                }
+                $item->addMedia($request->file('owner_photograph'))->toMediaCollection('owner_photograph');
+            }
+            
 
             // Step 4: Return success response with 200
             return response()->json([

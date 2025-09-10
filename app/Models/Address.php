@@ -32,7 +32,6 @@ class Address extends Model
     }
 
     protected $appends = ['full_address'];
-    
     public function getFullAddressAttribute()
     {
         return $this->address_1 . ', ' . $this->address_2 . ', ' . $this->city . ', ' . $this->state . ', ' . $this->country . ' - ' . $this->pincode;

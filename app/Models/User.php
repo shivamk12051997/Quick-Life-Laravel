@@ -18,7 +18,8 @@ class User extends Authenticatable implements HasMedia
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasApiTokens, HasFactory, Notifiable, InteractsWithMedia;
 
-    protected $appends = ['drug_license', 'gst_certificate'];
+    protected $appends = ['drug_license', 'gst_certificate', 'shop_establishment_certificate','pan_card','aadhaar_card','bank_account_details',
+        'storefront_photograph','owner_photograph'];
 
     public function getDrugLicenseAttribute()
     {
@@ -31,6 +32,37 @@ class User extends Authenticatable implements HasMedia
         $media = $this->getFirstMedia('gst_certificate');
         return $media ? $media->getUrl() : null;
     }
+    public function getShopEstablishmentCertificateAttribute()
+    {
+        $media = $this->getFirstMedia('shop_establishment_certificate');
+        return $media ? $media->getUrl() : null;
+    }
+    public function getPanCardAttribute()
+    {
+        $media = $this->getFirstMedia('pan_card');
+        return $media ? $media->getUrl() : null;
+    }
+    public function getAadhaarCardAttribute()
+    {
+        $media = $this->getFirstMedia('aadhaar_card');
+        return $media ? $media->getUrl() : null;
+    }
+    public function getBankAccountDetailsAttribute()
+    {
+        $media = $this->getFirstMedia('bank_account_details');
+        return $media ? $media->getUrl() : null;
+    }
+    public function getStorefrontPhotographAttribute()
+    {
+        $media = $this->getFirstMedia('storefront_photograph');
+        return $media ? $media->getUrl() : null;
+    }
+    public function getOwnerPhotographAttribute()
+    {
+        $media = $this->getFirstMedia('owner_photograph');
+        return $media ? $media->getUrl() : null;
+    }
+    
 
     /**
      * The attributes that are mass assignable.
@@ -49,8 +81,6 @@ class User extends Authenticatable implements HasMedia
         'city',
         'state',
         'pincode',
-        'license_number',
-        'gst_number',
         'status',
         'status_remarks',
     ];

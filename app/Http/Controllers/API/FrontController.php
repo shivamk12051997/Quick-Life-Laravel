@@ -17,6 +17,7 @@ use App\Models\OrderDetails;
 use App\Models\StockDetails;
 use Illuminate\Http\Request;
 use App\Models\SubscribeForm;
+use App\Models\DoctorProfile;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -399,8 +400,8 @@ class FrontController extends Controller
                 ]);
             }
             $input = $request->all();
-
-            if($address = Address::where('id', $request->input('address_id'))->where('customer_id', $customer->id)->first()) {
+            // return ($request->address['id']);
+            if($address = Address::where('id', ($request->address['id'] ?? 0))->where('customer_id', $customer->id)->first()) {
                 $input['address_id'] = $address->id;
                 $input['name'] = $address->name;
                 $input['phone'] = $address->phone;
@@ -795,5 +796,60 @@ class FrontController extends Controller
             'message' => 'Blog not found',
             'data' => []
         ], 404);
+    }
+    public function doctor_register(Request $request)
+    {
+        // Validation
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:doctor_profiles,email',
+            'phone' => 'required|string|max:20|unique:doctor_profiles,phone',
+            'specialization' => 'required|string|max:255',
+            'experience' => 'required|numeric|min:0',
+            'mbbs_degree_certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:4096',
+            'medical_council_registration_certificate' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:4096',
+            'aadhaar_card' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:4096',
+            'pan_card' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:4096',
+            'bank_account_details' => 'nullable|file|mimes:pdf,jpg,jpeg,png,webp|max:4096',
+            'professional_photo' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['status' => 'error', 'message' => 'Validation Error', 'errors' => $validator->errors()], 422);
+        }
+
+        // Data Save
+        $input = $request->only([
+            'name', 'email', 'phone', 'specialization', 'experience'
+        ]);
+        $input['created_by_id'] = 0;
+        $input['status'] = 0;
+
+        $doctor = DoctorProfile::create($input);
+
+        // File Uploads
+        if($request->hasFile('main_img')) {
+            $doctor->addMedia($request->file('main_img'))->toMediaCollection('main_img');
+        }
+        if($request->hasFile('mbbs_degree_certificate')) {
+            $doctor->addMedia($request->file('mbbs_degree_certificate'))->toMediaCollection('mbbs_degree_certificate');
+        }
+        if($request->hasFile('medical_council_registration_certificate')) {
+            $doctor->addMedia($request->file('medical_council_registration_certificate'))->toMediaCollection('medical_council_registration_certificate');
+        }
+        if($request->hasFile('aadhaar_card')) {
+            $doctor->addMedia($request->file('aadhaar_card'))->toMediaCollection('aadhaar_card');
+        }
+        if($request->hasFile('pan_card')) {
+            $doctor->addMedia($request->file('pan_card'))->toMediaCollection('pan_card');
+        }
+        if($request->hasFile('bank_account_details')) {
+            $doctor->addMedia($request->file('bank_account_details'))->toMediaCollection('bank_account_details');
+        }
+        if($request->hasFile('professional_photo')) {
+            $doctor->addMedia($request->file('professional_photo'))->toMediaCollection('professional_photo');
+        }
+
+        return response()->json(['status' => 'success', 'message' => 'Doctor registered successfully', 'doctor' => $doctor], 200);
     }
 }

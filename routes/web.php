@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\WebsiteController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\WarehouseController;
+use App\Http\Controllers\Admin\DoctorProfileController;
 use App\Http\Controllers\Warehouse\OrderController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\User\UserDashboardController;
@@ -86,6 +87,15 @@ Route::group(['middleware' => ['auth','is_Admin'], 'prefix' => 'admin'], functio
     Route::get('warehouse/delete/{id}', [WarehouseController::class, 'delete'])->name('admin.warehouse.delete');
     Route::get('warehouse/change_status', [WarehouseController::class, 'change_status'])->name('admin.warehouse.change_status');
     Route::post('warehouse/change_status_store', [WarehouseController::class, 'change_status_store'])->name('admin.warehouse.change_status_store');
+
+    // Doctor Profiles
+    Route::get('doctor_profile', [DoctorProfileController::class, 'index'])->name('admin.doctor_profile.index');
+    Route::get('doctor_profile/datatable', [DoctorProfileController::class, 'datatable'])->name('admin.doctor_profile.datatable');
+    Route::post('doctor_profile/store', [DoctorProfileController::class, 'store'])->name('admin.doctor_profile.store');
+    Route::get('doctor_profile/edit', [DoctorProfileController::class, 'edit'])->name('admin.doctor_profile.edit');
+    Route::get('doctor_profile/delete/{id}', [DoctorProfileController::class, 'delete'])->name('admin.doctor_profile.delete');
+    Route::get('doctor_profile/change_status', [DoctorProfileController::class, 'change_status'])->name('admin.doctor_profile.change_status');
+    Route::post('doctor_profile/change_status_store', [DoctorProfileController::class, 'change_status_store'])->name('admin.doctor_profile.change_status_store');
 
     // Blog
     Route::get('blog', [BlogController::class, 'index'])->name('admin.blog.index');

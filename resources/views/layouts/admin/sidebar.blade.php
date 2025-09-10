@@ -138,6 +138,11 @@
             </a>
           </li>
           <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('admin.doctor_profile.index') }}">
+              <i data-feather="user"></i><span>Doctor Profile</span>
+            </a>
+          </li>
+          <li class="sidebar-list">
             <a class="sidebar-link sidebar-title" href="#">
               <i data-feather="server"></i><span>Doctor Filter</span>
             </a>
