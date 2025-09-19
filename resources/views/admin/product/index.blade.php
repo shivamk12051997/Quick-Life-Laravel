@@ -112,9 +112,9 @@
             });
         }
 
-        function edit_modal(id){
+        function edit_modal(id, form_type='Edit'){
             $('#ajax_html').html('<div class="loader-box"><div class="loader-37"></div></div>');
-            $.get('{{ route('admin.product.edit') }}', { id:id }, function(data){
+            $.get('{{ route('admin.product.edit') }}', { id:id, form_type:form_type }, function(data){
                 $('#ajax_html').removeClass();
                 $('#ajax_html').addClass('modal-dialog modal-fullscreen');
                 $('#ajax_html').html(data);

@@ -11,12 +11,13 @@ use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\WebsiteController;
+use App\Http\Controllers\Admin\ChildCategoryController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\WarehouseController;
-use App\Http\Controllers\Admin\DoctorProfileController;
 use App\Http\Controllers\Warehouse\OrderController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\User\UserDashboardController;
+use App\Http\Controllers\Admin\DoctorProfileController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Warehouse\CurrentStockController;
 use App\Http\Controllers\Warehouse\StockDetailsController;
@@ -37,6 +38,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('media/delete/{id}', [WebsiteController::class, 'media_delete'])->name('media.delete');
     
     Route::get('get_sub_category', [AjaxController::class, 'get_sub_category'])->name('get_sub_category');
+    Route::get('get_child_category', [AjaxController::class, 'get_child_category'])->name('get_child_category');
 
 
 });
@@ -63,6 +65,13 @@ Route::group(['middleware' => ['auth','is_Admin'], 'prefix' => 'admin'], functio
     Route::get('sub_category/edit', [SubCategoryController::class, 'edit'])->name('admin.sub_category.edit');
     Route::get('sub_category/delete/{id}', [SubCategoryController::class, 'delete'])->name('admin.sub_category.delete');
     Route::get('sub_category/status/{id}', [SubCategoryController::class, 'status'])->name('admin.sub_category.status');
+    // ChildCategory
+    Route::get('child_category', [ChildCategoryController::class, 'index'])->name('admin.child_category.index');
+    Route::get('child_category/datatable', [ChildCategoryController::class, 'datatable'])->name('admin.child_category.datatable');
+    Route::post('child_category/store', [ChildCategoryController::class, 'store'])->name('admin.child_category.store');
+    Route::get('child_category/edit', [ChildCategoryController::class, 'edit'])->name('admin.child_category.edit');
+    Route::get('child_category/delete/{id}', [ChildCategoryController::class, 'delete'])->name('admin.child_category.delete');
+    Route::get('child_category/status/{id}', [ChildCategoryController::class, 'status'])->name('admin.child_category.status');
     // Brand
     Route::get('brand', [BrandController::class, 'index'])->name('admin.brand.index');
     Route::get('brand/datatable', [BrandController::class, 'datatable'])->name('admin.brand.datatable');

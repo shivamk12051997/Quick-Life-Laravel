@@ -7,7 +7,9 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\SubCategory;
 use Illuminate\Support\Str;
+use App\Models\StockDetails;
 use Illuminate\Http\Request;
+use App\Models\ChildCategory;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -81,9 +83,38 @@ class ProductController extends Controller
             $input['is_featured'] = $request->is_featured ?? 0;
             $input['status'] = $request->status ?? 0;
             $input['slug'] = Str::slug($request->name, '-');
+            if(isset($request->tax_rate) && $request->tax_rate > 0) {
+                $input['tax_amount'] = round(($request->sale_price * $request->tax_rate) / (100 + $request->tax_rate), 2);
+            } else {
+                $input['tax_amount'] = 0;
+            }
 
             $item = Product::updateOrCreate(['id' => $input['id']],$input);
             $item->code = 'P-' . str_pad($item->id, 3, '0', STR_PAD_LEFT);
+            // Save variation product ids
+            if($request->variation_product_ids ?? false){
+                $variation_ids = $request->variation_product_ids;
+                // Add the current product's ID to the list if it's not already there
+                if (!in_array($item->id, $variation_ids)) {
+                    $variation_ids[] = $item->id;
+                }
+                sort($variation_ids); // Keep the order consistent
+                $item->variation_product_ids = json_encode($variation_ids);
+                
+                // Update all related variation products
+                foreach ($variation_ids as $variation_product_id) {
+                    if ($variation_product_id != $item->id) { // Skip current product
+                        $variationProduct = Product::find($variation_product_id);
+                        if ($variationProduct) {
+                            $variationProduct->variation_product_ids = $item->variation_product_ids;
+                            $variationProduct->save();
+                        }
+                    }
+                }
+            } else {
+                $item->variation_product_ids = json_encode([]);
+            }
+
             $item->save();
 
             if($request->hasFile('main_img')) {
@@ -103,6 +134,23 @@ class ProductController extends Controller
                     }
                 } else {
                     $item->addMedia($galleryImgs)->toMediaCollection('gallery_imgs');
+                }
+            }
+
+            if($request->copy_product_id && $request->copy_product_id > 0){
+                $originalProduct = Product::find($request->copy_product_id);
+                if($originalProduct){
+                    $mainImage = $originalProduct->getFirstMedia('main_img');
+                    if ($mainImage && !$request->hasFile('main_img')) {
+                        $item->addMedia($mainImage->getPath())
+                             ->usingFileName($mainImage->file_name)
+                             ->toMediaCollection('main_img');
+                    }
+                    foreach ($originalProduct->getMedia('gallery_imgs') as $media) {
+                        $item->addMedia($media->getPath())
+                             ->usingFileName($media->file_name)
+                             ->toMediaCollection('gallery_imgs');
+                    }
                 }
             }
             
@@ -127,12 +175,15 @@ class ProductController extends Controller
         $brands = Brand::where('status', 1)->get();
         $categories = Category::where('status', 1)->get();
         $sub_categories = SubCategory::where('category_id', ($product->category_id ?? 0))->where('status', 1)->get();
-        return view('admin.product.ajax_edit', compact('product', 'brands', 'categories', 'sub_categories'));
+        $child_categories = ChildCategory::where('sub_category_id', ($product->sub_category_id ?? 0))->where('status', 1)->get();
+        $product_variations = Product::select('id', 'name')->where('status', 1)->where('id', '!=', ($product->id ?? 0))->get();
+        return view('admin.product.ajax_edit', compact('product', 'brands', 'categories', 'sub_categories', 'child_categories', 'product_variations'));
     }
 
     public function delete($id)
     {
         $product = Product::find($id)->delete();
+        $stock_details = StockDetails::where('product_id', $id)->delete();
 
         return ['message' => ' Product Deleted Successfully'];
     }

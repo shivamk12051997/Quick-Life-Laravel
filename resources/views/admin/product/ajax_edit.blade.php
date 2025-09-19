@@ -1,8 +1,14 @@
 <form class="modal-content" action="{{ route('admin.product.store') }}" method="post" enctype="multipart/form-data">
     @csrf
-    <input type="hidden" name="id" value="{{ $product->id ?? 0 }}">
+    @if (request()->get('form_type') == 'Copy')
+        <input type="hidden" name="id" value="0">
+        <input type="hidden" name="copy_product_id" value="{{ $product->id ?? 0 }}">
+        @else      
+        <input type="hidden" name="id" value="{{ $product->id ?? 0 }}">
+        <input type="hidden" name="copy_product_id" value="0">
+    @endif
     <div class="modal-header">
-        <h4 class="modal-title" id="mySmallModalLabel">{{ ($product->id ?? 0) != 0 ? 'Edit':'Add' }} Product </h4>
+        <h4 class="modal-title" id="mySmallModalLabel">{{ request()->get('form_type') ?? 'Add' }} Product </h4>
         <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close" data-bs-original-title="" title=""></button>
     </div>
     <div class="modal-body dark-modal">
@@ -31,20 +37,29 @@
             </div>
             <div class="col-md-2 form-group mb-3">
                 <h6>Sub Category <span>*</span></h6>
-                <select name="sub_category_id" class="js-example-basic-single" id="sub_category_id" required>
+                <select name="sub_category_id" class="js-example-basic-single" id="sub_category_id" onchange="get_child_category()" required>
                     <option value="" disabled selected>Select Sub Category...</option>
-                    @foreach ($sub_categories as $sub_category)
+                    @foreach (($sub_categories ?? []) as $sub_category)
                         <option value="{{ $sub_category->id }}" {{ ($product->sub_category_id ?? 0) == $sub_category->id ? 'selected':'' }}>{{ $sub_category->name }}</option>
                     @endforeach
                 </select>
             </div>
             <div class="col-md-2 form-group mb-3">
-                <h6>Unit <span>*</span></h6>
-                <input type="text" class="form-control" name="unit" id="" value="{{ $product->unit ?? '' }}" required>
+                <h6>Child Category <span>*</span></h6>
+                <select name="child_category_id" class="js-example-basic-single" id="child_category_id" required>
+                    <option value="" disabled selected>Select Child Category...</option>
+                    @foreach (($child_categories ?? []) as $child_category)
+                        <option value="{{ $child_category->id }}" {{ ($product->child_category_id ?? 0) == $child_category->id ? 'selected':'' }}>{{ $child_category->name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-md-2 form-group mb-3">
-                <h6>Quantity <span>*</span></h6>
-                <input type="text" class="form-control" name="qty" id="" value="{{ $product->qty ?? '' }}" required>
+                <h6>SKU <span>*</span></h6>
+                <input type="text" class="form-control" name="sku" id="" value="{{ $product->sku ?? '' }}" required>
+            </div>
+            <div class="col-md-2 form-group mb-3">
+                <h6>Unit <span>*</span></h6>
+                <input type="text" class="form-control" name="unit" id="" value="{{ $product->unit ?? '' }}" required>
             </div>
             <div class="col-md-2 form-group mb-3">
                 <h6>Prescription Required <span>*</span></h6>
@@ -72,6 +87,7 @@
                 <select name="tax_rate" id="" class="form-select" required>
                     <option value="5" {{ ($product->tax_rate ?? 0) == 5 ? 'selected':'' }}>5%</option>
                     <option value="12" {{ ($product->tax_rate ?? 0) == 12 ? 'selected':'' }}>12%</option>
+                    <option value="18" {{ ($product->tax_rate ?? 0) == 18 ? 'selected':'' }}>18%</option>
                 </select>
             </div>
             <div class="col-md-2 form-group">
@@ -85,6 +101,14 @@
                 <label class="switch">
                     <input type="checkbox"  name="status" value="1" {{ ($product->status ?? 1) == 1 ? 'checked':'' }}><span class="switch-state"></span>
                 </label>
+            </div>
+            <div class="col-md-6 form-group mb-3">
+                <h6>Variation Products <small class="text-muted">(Multiple)</small> <span>*</span></h6>
+                <select name="variation_product_ids[]" id="variation_products" class="form-control js-example-basic-multiple" placeholder="Select Product For Variation..." multiple>
+                    @foreach ($product_variations as $product_variation)
+                        <option value="{{ $product_variation->id }}" {{ (in_array($product_variation->id, (json_decode($product->variation_product_ids ?? '[]') ?? [])) ? 'selected' : '') }}>{{ $product_variation->name }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="col-md-3 form-group mb-3">
                 <h6>Main Image <small class="text-muted">(Single)</small> <span>*</span></h6>
@@ -109,6 +133,7 @@
                     @endforeach
                 @endif
             </div>
+            
             <div class="col-md-12 form-group mb-3">
                 <h6>Use-case <span>*</span></h6>
                 <textarea class="form-control" name="use_case" id="" cols="30" rows="5">{!! $product->use_case ?? '' !!}</textarea>
@@ -133,6 +158,15 @@
         $.get('{{ url('get_sub_category') }}', { category_id:category_id }, function(data){
             $('#sub_category_id').html(data);
             $('#sub_category_id').prop('disabled',false);
+            $('.js-example-basic-single').select2();
+        });
+    }
+    function get_child_category(){
+        var sub_category_id = $('select[name="sub_category_id"]').val();
+        $('#child_category_id').prop('disabled',true);
+        $.get('{{ url('get_child_category') }}', { sub_category_id:sub_category_id }, function(data){
+            $('#child_category_id').html(data);
+            $('#child_category_id').prop('disabled',false);
             $('.js-example-basic-single').select2();
         });
     }

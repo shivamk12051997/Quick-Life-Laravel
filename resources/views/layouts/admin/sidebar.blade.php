@@ -40,6 +40,7 @@
             <ul class="sidebar-submenu">
               <li><a href="{{ route('admin.category.index') }}">All Categories</a></li>
               <li><a href="{{ route('admin.sub_category.index') }}">All Sub Categories</a></li>
+              <li><a href="{{ route('admin.child_category.index') }}">All Child Categories</a></li>
               <li><a href="{{ route('admin.brand.index') }}">All Brands/Manufacturers</a></li>
             </ul>
           </li>

@@ -1,4 +1,5 @@
 <td>{{ $item->code ?? '-' }}</td>
+<td>{{ $item->sku ?? '-' }}</td>
 <td>{{ $item->name ?? '-' }}</td>
 <td>
     <div class="img-box">
@@ -7,7 +8,8 @@
 </td>
 <td>{{ $item->brand->name ?? '-' }}</td>
 <td>{{ $item->category->name ?? '-' }}</td>
-<td>MRP: <b>{{ price_format($item->mrp_price ?? 0) }}</b> <br>
+<td>
+    MRP: <b>{{ price_format($item->mrp_price ?? 0) }}</b> <br>
     Sale Price: <b>{{ price_format($item->sale_price ?? 0) }}</b>
 </td>
 <td>
@@ -23,7 +25,10 @@
     {{-- <a href="{{ route('product.show',$item->id) }}" class="text-primary p-1 f-22">
         <i class="fa fa-eye"></i>
     </a> --}}
-    <a href="#" class="text-warning p-1 f-22" data-toggle="tooltip" title="Edit" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $item->id }})">
+    <a href="#" class="text-primary p-1 f-20" data-toggle="tooltip" title="Edit" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $item->id }}, 'Copy')">
+        <i class="fa fa-clone"></i>
+    </a>
+    <a href="#" class="text-warning p-1 f-22" data-toggle="tooltip" title="Edit" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $item->id }}, 'Edit')">
         <i class="fa fa-edit"></i>
     </a>
     <a onclick="delete_entry('{{ route('admin.product.delete',$item->id)}}', {{ $item->id }})" class="text-danger pointer p-1 f-22" data-toggle="tooltip" title="Delete">

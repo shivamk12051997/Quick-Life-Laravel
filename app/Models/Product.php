@@ -56,7 +56,9 @@ class Product extends Model implements HasMedia
         'brand_id',
         'category_id',
         'sub_category_id',
+        'child_category_id',
         'code',
+        'sku',
         'name',
         'slug',
         'unit',
@@ -65,6 +67,7 @@ class Product extends Model implements HasMedia
         'mrp_price',
         'sale_price',
         'tax_rate',
+        'tax_amount',
         'use_case',
         'description',
         'is_featured',
@@ -84,10 +87,13 @@ class Product extends Model implements HasMedia
     {
         return $this->belongsTo('App\Models\SubCategory', 'sub_category_id', 'id');
     }
+    public function child_category()
+    {
+        return $this->belongsTo('App\Models\ChildCategory', 'child_category_id', 'id');
+    }
     public function stock_details()
     {
         return $this->hasMany('App\Models\StockDetails', 'product_id', 'id');
     }
-    
 
 }
