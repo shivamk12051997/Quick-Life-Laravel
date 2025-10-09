@@ -8,15 +8,16 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Admin\BlogController;
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\CouponController;
 use App\Http\Controllers\Admin\PolicyController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\WebsiteController;
-use App\Http\Controllers\Admin\ChildCategoryController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\WarehouseController;
 use App\Http\Controllers\Warehouse\OrderController;
 use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\User\UserDashboardController;
+use App\Http\Controllers\Admin\ChildCategoryController;
 use App\Http\Controllers\Admin\DoctorProfileController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Warehouse\CurrentStockController;
@@ -79,6 +80,13 @@ Route::group(['middleware' => ['auth','is_Admin'], 'prefix' => 'admin'], functio
     Route::get('brand/edit', [BrandController::class, 'edit'])->name('admin.brand.edit');
     Route::get('brand/delete/{id}', [BrandController::class, 'delete'])->name('admin.brand.delete');
     Route::get('brand/status/{id}', [BrandController::class, 'status'])->name('admin.brand.status');
+    // Coupon
+    Route::get('coupon', [CouponController::class, 'index'])->name('admin.coupon.index');
+    Route::get('coupon/datatable', [CouponController::class, 'datatable'])->name('admin.coupon.datatable');
+    Route::post('coupon/store', [CouponController::class, 'store'])->name('admin.coupon.store');
+    Route::get('coupon/edit', [CouponController::class, 'edit'])->name('admin.coupon.edit');
+    Route::get('coupon/delete/{id}', [CouponController::class, 'delete'])->name('admin.coupon.delete');
+    Route::get('coupon/status/{id}', [CouponController::class, 'status'])->name('admin.coupon.status');
 
     // Product
     Route::get('product', [ProductController::class, 'index'])->name('admin.product.index');

@@ -21,7 +21,7 @@ class Product extends Model implements HasMedia
               ->format('webp'); // Ensure the format is set to .webp
     }
 
-    protected $appends = ['image_url', 'thumb_url', 'gallery_urls', 'current_stock'];
+    protected $appends = ['image_url', 'thumb_url', 'gallery_urls', 'current_stock', 'variation_products'];
 
     public function getImageUrlAttribute()
     {
@@ -47,6 +47,24 @@ class Product extends Model implements HasMedia
         $in =  $this->stock_details()->where('in_out', 'In')->sum('qty');
         $out =  $this->stock_details()->where('in_out', 'Out')->sum('qty');
         return $in - $out;
+    }
+    public function getVariationProductsAttribute()
+    {
+        if (empty($this->variation_product_ids)) {
+            return [];
+        }
+        
+        $variation_ids = json_decode($this->variation_product_ids, true);
+        
+        if (!is_array($variation_ids) || empty($variation_ids)) {
+            return [];
+        }
+        
+        return Product::whereIn('id', $variation_ids)
+                     ->where('id', '!=', $this->id)
+                     ->where('status', 1)
+                     ->select('id', 'name', 'slug', 'sale_price', 'mrp_price')
+                     ->get();
     }
 
 

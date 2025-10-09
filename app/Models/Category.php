@@ -58,9 +58,17 @@ class Category extends Model implements HasMedia
     {
         return $this->hasMany('App\Models\SubCategory', 'category_id', 'id')->where('status', 1);
     }
-    public function featured_sub_categories()
+     public function featured_sub_categories()
     {
         return $this->hasMany('App\Models\SubCategory', 'category_id', 'id')->where('status', 1)->where('is_featured', 1);
+    }
+    public function child_categories()
+    {
+        return $this->hasMany('App\Models\ChildCategory', 'category_id', 'id')->where('status', 1);
+    }
+    public function featured_child_categories()
+    {
+        return $this->hasMany('App\Models\ChildCategory', 'category_id', 'id')->where('status', 1)->where('is_featured', 1);
     }
     public function getProductsCountAttribute()
     {

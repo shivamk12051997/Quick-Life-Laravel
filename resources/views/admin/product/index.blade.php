@@ -3,7 +3,15 @@
 @section('title', 'All Products')
 
 @section('css')
-   
+   <style>
+        .filter_box .select2-container .select2-selection--single{
+            height: 30px !important;
+            padding: 5px;
+        }
+        .filter_box .select2-container--default .select2-selection--single .select2-selection__arrow{
+            top: 3px !important;
+        }
+   </style>
 @endsection
 
 @section('breadcrumb-items')
@@ -18,11 +26,10 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    
                     <div class="card-body">
                         <div class="dt-ext ">
                             <div id="datatable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer" onchange="get_datatable()">
-                                <div class="row justify-content-between">
+                                <div class="row justify-content-between g-0 filter_box">
                                     <div class="col-sm-12 col-md-6 col-lg-auto">
                                         <label>Show entries:</label>
                                         <select name="datatable_length" class="form-select form-select-sm" id="datatable_page_show">
@@ -43,7 +50,7 @@
                                     </div>
                                     <div class="col-sm-12 col-md-6 col-lg-auto">
                                         <label>Brand: </label>
-                                        <select name="brand_filter" class="form-select form-select-sm ms-2" id="brand_filter">
+                                        <select name="brand_filter" class="form-select form-select-sm ms-2 js-example-basic-single" id="brand_filter">
                                             <option value="" selected>All Brands</option>
                                             @foreach (App\Models\Brand::all() as $brand)
                                                 <option value="{{ $brand->id }}" {{ (request('brand_filter') == $brand->id) ? 'selected' : '' }}>{{ $brand->name }}</option>
@@ -52,10 +59,19 @@
                                     </div>
                                     <div class="col-sm-12 col-md-6 col-lg-auto">
                                         <label>Category: </label>
-                                        <select name="category_filter" class="form-select form-select-sm ms-2" id="category_filter">
+                                        <select name="category_filter" class="form-select form-select-sm ms-2 js-example-basic-single" id="category_filter" onchange="get_sub_category()">
                                             <option value="" selected>All Categories</option>
                                             @foreach (App\Models\Category::all() as $category)
                                                 <option value="{{ $category->id }}" {{ (request('category_filter') == $category->id) ? 'selected' : '' }}>{{ $category->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12 col-md-6 col-lg-auto">
+                                        <label>Sub Category: </label>
+                                        <select name="sub_category_filter" class="form-select form-select-sm ms-2 js-example-basic-single" id="sub_category_filter">
+                                            <option value="" selected>All Sub Categories</option>
+                                            @foreach (App\Models\SubCategory::all() as $sub_category)
+                                                <option value="{{ $sub_category->id }}" {{ (request('sub_category_filter') == $sub_category->id) ? 'selected' : '' }}>{{ $sub_category->name }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -105,8 +121,9 @@
             var status_filter = $('#status_filter').val();
             var brand_filter = $('#brand_filter').val();
             var category_filter = $('#category_filter').val();
+            var sub_category_filter = $('#sub_category_filter').val();
             var page = page ?? 1;
-            $.get('{{ route("admin.product.datatable") }}', { page:page, value:value, search:search, status_filter:status_filter, brand_filter:brand_filter, category_filter:category_filter }, function(data){
+            $.get('{{ route("admin.product.datatable") }}', { page:page, value:value, search:search, status_filter:status_filter, brand_filter:brand_filter, category_filter:category_filter, sub_category_filter:sub_category_filter }, function(data){
                 $('#get_datatable').html(data);
                 feather.replace();
             });
@@ -136,8 +153,17 @@
                 }
             });
         }
-
+        function get_sub_category(){
+            var category_id = $('select[name="category_filter"]').val();
+            $('#sub_category_filter').prop('disabled',true);
+            $.get('{{ url('get_sub_category') }}', { category_id:category_id }, function(data){
+                $('#sub_category_filter').html(data);
+                $('#sub_category_filter').prop('disabled',false);
+                $('.js-example-basic-single').select2();
+            });
+        }
     </script>
+
     <script src="{{ asset('custom_files/form_save.js') }}"></script>
     <script src="{{ asset('assets/js/editor/ckeditor/ckeditor.js') }}"></script>
     <script src="{{ asset('assets/js/editor/ckeditor/adapters/jquery.js') }}"></script>

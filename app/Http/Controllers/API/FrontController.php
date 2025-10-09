@@ -7,6 +7,7 @@ use App\Models\Cart;
 use App\Models\User;
 use App\Models\Brand;
 use App\Models\Order;
+use App\Models\Coupon;
 use App\Models\Policy;
 use App\Models\Address;
 use App\Models\Product;
@@ -16,8 +17,8 @@ use App\Models\SubCategory;
 use App\Models\OrderDetails;
 use App\Models\StockDetails;
 use Illuminate\Http\Request;
-use App\Models\SubscribeForm;
 use App\Models\DoctorProfile;
+use App\Models\SubscribeForm;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -36,23 +37,26 @@ class FrontController extends Controller
 
     function products(Request $request)
     {
-        if($request->header('pincode')){
-            $products = Product::where('status', 1)
-                ->whereHas('stock_details', function ($query) use ($request) {
-                    $query->whereHas('warehouse', function ($query) use ($request) {
-                        $query->where('pincode', $request->header('pincode'))
-                            ->where('status', 1);
-                    });
-                });
-        }else{
-            $products = Product::where('status', 1);
-        }
+        // if($request->header('pincode')){
+        //     $products = Product::where('status', 1)
+        //         ->whereHas('stock_details', function ($query) use ($request) {
+        //             $query->whereHas('warehouse', function ($query) use ($request) {
+        //                 $query->where('pincode', $request->header('pincode'))
+        //                     ->where('status', 1);
+        //             });
+        //         });
+        // }else{
+        // }
+        $products = Product::where('status', 1);
 
         if ($request->category_id) {
             $products = $products->where('category_id', $request->input('category_id'));
         }
         if ($request->sub_category_id) {
             $products = $products->where('sub_category_id', $request->input('sub_category_id'));
+        }
+        if ($request->child_category_id) {
+            $products = $products->where('child_category_id', $request->input('child_category_id'));
         }
         if ($request->brand_id) {
             $products = $products->where('brand_id', $request->input('brand_id'));
@@ -108,17 +112,18 @@ class FrontController extends Controller
 
     function product_show(Request $request, $slug)
     {
-        if($request->header('pincode')){
-            $product = Product::where('status', 1)
-                ->whereHas('stock_details', function ($query) use ($request) {
-                    $query->whereHas('warehouse', function ($query) use ($request) {
-                        $query->where('pincode', $request->header('pincode'))
-                            ->where('status', 1);
-                    });
-                });
-        } else {
-            $product = Product::where('status', 1);
-        }
+        // if($request->header('pincode')){
+        //     $product = Product::where('status', 1)
+        //         ->whereHas('stock_details', function ($query) use ($request) {
+        //             $query->whereHas('warehouse', function ($query) use ($request) {
+        //                 $query->where('pincode', $request->header('pincode'))
+        //                     ->where('status', 1);
+        //             });
+        //         });
+        // } else {
+        //     $product = Product::where('status', 1);
+        // }
+        $product = Product::where('status', 1);
         
         $product = $product->where('slug', $slug)->with('brand')->with('category')->with('sub_category')->first();
         return response()->json([
@@ -215,6 +220,12 @@ class FrontController extends Controller
         }
         if($request->with_featured_sub_categories) {
             $categories = $categories->with('featured_sub_categories');
+        }
+        if($request->with_child_categories) {
+            $categories = $categories->with('child_categories');
+        }
+        if($request->with_featured_child_categories) {
+            $categories = $categories->with('featured_child_categories');
         }
         if($request->with_products) {
             $categories = $categories->with('products');
@@ -436,6 +447,12 @@ class FrontController extends Controller
             $order->order_no = 'ORD-' . str_pad($order->id, 3, '0', STR_PAD_LEFT);
             $order->save();
             // Insert order details
+
+            $coupon = Coupon::where('coupon_code', $request->input('coupon_code'))->where('coupon_used','<=', 0)->whereDate('expiry_date', '>=', date('Y-m-d'))->where('status', 1)->first();
+            if($coupon){
+                $coupon->coupon_used = $coupon->coupon_used + 1;
+                $coupon->save();
+            }
 
             foreach ($cartItems as $item) {
                 $orderDetails = [];
@@ -851,5 +868,38 @@ class FrontController extends Controller
         }
 
         return response()->json(['status' => 'success', 'message' => 'Doctor registered successfully', 'doctor' => $doctor], 200);
+    }
+
+    public function coupon_codes()
+    {
+        $coupons = Coupon::whereDate('expiry_date', '>=', date('Y-m-d'))->where('status', 1)->get();
+        if ($coupons->isEmpty()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'No Coupons Available',
+                'data' => []
+            ], 200);
+        }
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Coupons retrieved successfully',
+            'data' => $coupons
+        ], 200);
+    }
+    public function verify_coupon(Request $request)
+    {
+        $coupon = Coupon::where('coupon_code', $request->input('coupon_code'))->where('coupon_used','<=', 0)->whereDate('expiry_date', '>=', date('Y-m-d'))->where('status', 1)->first();
+        if ($coupon) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Coupon verified successfully',
+                'data' => $coupon
+            ], 200);
+        }
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Invalid Coupon',
+            'data' => []
+        ], 200);
     }
 }

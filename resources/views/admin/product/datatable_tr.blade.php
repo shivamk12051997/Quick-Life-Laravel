@@ -13,6 +13,13 @@
     Sale Price: <b>{{ price_format($item->sale_price ?? 0) }}</b>
 </td>
 <td>
+    <ul style="list-style-type: disc;">
+        @foreach ($item->variation_products as $variation)
+            <li>{{ $variation->name }} - <b>{{ price_format($variation->sale_price) }}</b></li>
+        @endforeach
+    </ul>
+</td>
+<td>
     <span class="badge badge-light-{{ $item->prescription_required == 'Yes' ? 'success':'danger' }}">{{ $item->prescription_required }}</span>
 </td>
 <td>
@@ -25,7 +32,7 @@
     {{-- <a href="{{ route('product.show',$item->id) }}" class="text-primary p-1 f-22">
         <i class="fa fa-eye"></i>
     </a> --}}
-    <a href="#" class="text-primary p-1 f-20" data-toggle="tooltip" title="Edit" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $item->id }}, 'Copy')">
+    <a href="#" class="text-primary p-1 f-20" data-toggle="tooltip" title="Copy" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $item->id }}, 'Copy')">
         <i class="fa fa-clone"></i>
     </a>
     <a href="#" class="text-warning p-1 f-22" data-toggle="tooltip" title="Edit" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $item->id }}, 'Edit')">

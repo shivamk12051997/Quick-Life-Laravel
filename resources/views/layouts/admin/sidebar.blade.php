@@ -62,6 +62,18 @@
               </a>
             </li>
           @endif
+          @if (Auth::user()->role_as == 'Admin')
+          <li class="sidebar-main-title">
+            <div>
+              <h6>Coupon Management</h6>
+            </div>
+          </li>
+          <li class="sidebar-list">
+            <a class="sidebar-link sidebar-title link-nav" href="{{ route('admin.coupon.index') }}">
+              <i data-feather="percent"></i><span>All Coupons</span>
+            </a>
+          </li>
+          @endif
           <li class="sidebar-main-title">
             <div>
               <h6>Stock Management</h6>

@@ -49,5 +49,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/dashboard-data', [FrontController::class, 'dashboard_data']);
     Route::get('/order-history', [FrontController::class, 'order_history']);
     Route::get('/order-details/{order_no}', [FrontController::class, 'order_details']);
+    Route::get('/coupon-codes', [FrontController::class, 'coupon_codes']);
+    Route::post('/verify-coupon', [FrontController::class, 'verify_coupon']);
 
 });

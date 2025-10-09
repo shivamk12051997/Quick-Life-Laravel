@@ -51,7 +51,7 @@
       .select2-container--default .select2-selection--multiple .select2-selection__choice{
         margin-top: 5px !important; 
       }
-      .form-group span{
+      .form-group h6 span, .form-group label span{
         color: #FF0000;
       }
       .cke_button_label, .cke_combo_text {

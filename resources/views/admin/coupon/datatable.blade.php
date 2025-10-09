@@ -3,25 +3,21 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>Product Code</th>
-                <th>SKU</th>
-                <th>Name</th>
-                <th>Image</th>
-                <th>Brand</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Variant Products</th>
-                <th>Prescription</th>
-                <th>Is Featured</th>
+                <th>Coupon Code</th>
+                <th>Percentage</th>
+                <th>Amount Limit</th>
+                <th>Coupon Used</th>
+                <th>Usage Limit</th>
+                <th>Expiry Date</th>
                 <th>Status</th>
                 <th>Options</th>
             </tr>
         </thead>
         <tbody>
-            @foreach ($product as $key => $item)
+            @foreach ($coupon as $key => $item)
             <tr id="tr_{{ $item->id }}">
-                <td class="sr">{{ $product->firstItem() + $loop->index }}</td>
-                @include('admin.product.datatable_tr')
+                <td class="sr">{{ $coupon->firstItem() + $loop->index }}</td>
+                @include('admin.coupon.datatable_tr')
             </tr>
             @endforeach
         </tbody>
@@ -30,5 +26,5 @@
 </div>
 
 <div>
-    {{$product->links()}}
+    {{$coupon->links()}}
 </div>
