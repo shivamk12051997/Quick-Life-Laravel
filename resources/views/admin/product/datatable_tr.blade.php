@@ -1,4 +1,4 @@
-<td>{{ $item->code ?? '-' }}</td>
+<td><a href="{{ live_url('product/'.$item->slug) }}" target="_blank">{{ $item->code ?? '-' }}</a></td>
 <td>{{ $item->sku ?? '-' }}</td>
 <td>{{ $item->name ?? '-' }}</td>
 <td>
@@ -29,9 +29,9 @@
     <span class="badge badge-{{ $item->status == '1' ? 'success':'danger' }} pointer" id="status_{{ $item->id }}" onclick="change_status({{ $item->id }})">{{ $item->status == '1' ? 'Active':'Inactive' }}</span>
 </td>
 <td>
-    {{-- <a href="{{ route('product.show',$item->id) }}" class="text-primary p-1 f-22">
+    <a href="{{ live_url('product/'.$item->slug) }}" class="text-primary p-1 f-22" target="_blank">
         <i class="fa fa-eye"></i>
-    </a> --}}
+    </a>
     <a href="#" class="text-primary p-1 f-20" data-toggle="tooltip" title="Copy" data-bs-toggle="modal" data-bs-target="#edit_modal" onclick="edit_modal({{ $item->id }}, 'Copy')">
         <i class="fa fa-clone"></i>
     </a>

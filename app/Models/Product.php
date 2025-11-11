@@ -21,12 +21,63 @@ class Product extends Model implements HasMedia
               ->format('webp'); // Ensure the format is set to .webp
     }
 
-    protected $appends = ['image_url', 'thumb_url', 'gallery_urls', 'current_stock', 'variation_products'];
+    use SoftDeletes;
+    protected $fillable = [
+        'created_by_id',
+        'brand_id',
+        'category_id',
+        'sub_category_id',
+        'child_category_id',
+        'code',
+        'sku',
+        'name',
+        'slug',
+        'unit',
+        'qty',
+        'prescription_required',
+        'mrp_price',
+        'sale_price',
+        'tax_rate',
+        'tax_amount',
+        'use_case',
+        'description',
+        'variation_name',
+        'variation_product_ids',
+        'is_featured',
+        'status',
+        'deleted_at',
+    ];
 
-    public function getImageUrlAttribute()
+    public function brand()
     {
-        $media = $this->getFirstMedia('main_img');
-        return $media ? $media->getUrl() : null;
+        return $this->belongsTo('App\Models\Brand', 'brand_id', 'id');
+    }
+    public function category()
+    {
+        return $this->belongsTo('App\Models\Category', 'category_id', 'id');
+    }
+    public function sub_category()
+    {
+        return $this->belongsTo('App\Models\SubCategory', 'sub_category_id', 'id');
+    }
+    public function child_category()
+    {
+        return $this->belongsTo('App\Models\ChildCategory', 'child_category_id', 'id');
+    }
+    public function stock_details()
+    {
+        return $this->hasMany('App\Models\StockDetails', 'product_id', 'id');
+    }
+
+    protected $appends = ['image_url', 'thumb_url', 'gallery_urls', 'current_stock', 'variation_products', 'brand_name', 'category_name'];
+
+    public function getBrandNameAttribute()
+    {
+        return $this->brand ? $this->brand->name : null;
+    }
+    public function getCategoryNameAttribute()
+    {
+        return $this->category ? $this->category->name : null;
     }
 
     public function getThumbUrlAttribute()
@@ -67,51 +118,13 @@ class Product extends Model implements HasMedia
                      ->get();
     }
 
+    public function getImageUrlAttribute()
+    {
+        $media = $this->getFirstMedia('main_img');
+        return $media ? $media->getUrl() : null;
+    }
 
-    use SoftDeletes;
-    protected $fillable = [
-        'created_by_id',
-        'brand_id',
-        'category_id',
-        'sub_category_id',
-        'child_category_id',
-        'code',
-        'sku',
-        'name',
-        'slug',
-        'unit',
-        'qty',
-        'prescription_required',
-        'mrp_price',
-        'sale_price',
-        'tax_rate',
-        'tax_amount',
-        'use_case',
-        'description',
-        'is_featured',
-        'status',
-        'deleted_at',
-    ];
 
-    public function brand()
-    {
-        return $this->belongsTo('App\Models\Brand', 'brand_id', 'id');
-    }
-    public function category()
-    {
-        return $this->belongsTo('App\Models\Category', 'category_id', 'id');
-    }
-    public function sub_category()
-    {
-        return $this->belongsTo('App\Models\SubCategory', 'sub_category_id', 'id');
-    }
-    public function child_category()
-    {
-        return $this->belongsTo('App\Models\ChildCategory', 'child_category_id', 'id');
-    }
-    public function stock_details()
-    {
-        return $this->hasMany('App\Models\StockDetails', 'product_id', 'id');
-    }
+    
 
 }

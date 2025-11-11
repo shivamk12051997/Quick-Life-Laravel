@@ -90,6 +90,29 @@
                     <option value="18" {{ ($product->tax_rate ?? 0) == 18 ? 'selected':'' }}>18%</option>
                 </select>
             </div>
+            <div class="col-md-4 form-group mb-3">
+                <h6>Main Image <small class="text-muted">(Single)</small> <span>*</span></h6>
+                <input type="file" class="form-control" name="main_img" id="" accept="image/*">
+                @if (($product ?? '') != '')
+                    @foreach (($product->getMedia('main_img') ?? []) as $file)
+                    <div class="img-box media_id_{{ $file->id }}">
+                        <a href="{{ $file->getURL() ?? '#' }}" target="_blank"><img src="{{ $file->getURL('thumb') ?? '#' }}" alt="" style="width: 60px; height: 60px; object-fit: contain"></a>
+                    </div>
+                    @endforeach
+                @endif
+            </div>
+            <div class="col-md-6 form-group mb-3">
+                <h6>Gallery Images <small class="text-muted">(Multiple)</small> <span>*</span></h6>
+                <input type="file" class="form-control" name="gallery_imgs[]" id="gallery_imgs" accept="image/*" multiple>
+                 @if (($product ?? '') != '')
+                    @foreach (($product->getMedia('gallery_imgs') ?? []) as $file)
+                    <div class="img-box media_id_{{ $file->id }}">
+                        <a href="{{ $file->getURL() ?? '#' }}" target="_blank"><img src="{{ $file->getURL('thumb') ?? '#' }}" alt="" style="width: 60px; height: 60px; object-fit: contain"></a>
+                        <a href="javascript:void({{ $file->id }})" class="f-18 text-danger" onclick="delete_media({{ $file->id }})"><i class="fa fa-trash-o"></i></a>
+                    </div>
+                    @endforeach
+                @endif
+            </div>
             <div class="col-md-2 form-group">
                 <h6>Is Featured <span>*</span></h6>
                 <label class="switch">
@@ -102,6 +125,10 @@
                     <input type="checkbox"  name="status" value="1" {{ ($product->status ?? 1) == 1 ? 'checked':'' }}><span class="switch-state"></span>
                 </label>
             </div>
+            <div class="col-md-2 form-group mb-3">
+                <h6>Self Variation Name <span>*</span></h6>
+                <input type="text" class="form-control" name="variation_name" id="" value="{{ $product->variation_name ?? '' }}" required>
+            </div>
             <div class="col-md-6 form-group mb-3">
                 <h6>Variation Products <small class="text-muted">(Multiple)</small> <span>*</span></h6>
                 <select name="variation_product_ids[]" id="variation_products" class="form-control js-example-basic-multiple" placeholder="Select Product For Variation..." multiple>
@@ -110,30 +137,7 @@
                     @endforeach
                 </select>
             </div>
-            <div class="col-md-3 form-group mb-3">
-                <h6>Main Image <small class="text-muted">(Single)</small> <span>*</span></h6>
-                <input type="file" class="form-control" name="main_img" id="" accept="image/*">
-                @if (($product ?? '') != '')
-                    @foreach (($product->getMedia('main_img') ?? []) as $file)
-                    <div class="img-box media_id_{{ $file->id }}">
-                        <a href="{{ $file->getURL() ?? '#' }}" target="_blank"><img src="{{ $file->getURL('thumb') ?? '#' }}" alt="" style="width: 60px; height: 60px; object-fit: contain"></a>
-                    </div>
-                    @endforeach
-                @endif
-            </div>
-            <div class="col-md-5 form-group mb-3">
-                <h6>Gallery Images <small class="text-muted">(Multiple)</small> <span>*</span></h6>
-                <input type="file" class="form-control" name="gallery_imgs[]" id="gallery_imgs" accept="image/*" multiple>
-                 @if (($product ?? '') != '')
-                    @foreach (($product->getMedia('gallery_imgs') ?? []) as $file)
-                    <div class="img-box media_id_{{ $file->id }}">
-                        <a href="{{ $file->getURL() ?? '#' }}" target="_blank"><img src="{{ $file->getURL('thumb') ?? '#' }}" alt="" style="width: 60px; height: 60px; object-fit: contain"></a>
-                        <a href="javascript:void({{ $file->id }})" class="f-18 text-danger" onclick="delete_media({{ $file->id }})"><i class="fa fa-trash-o"></i></a>
-                    </div>
-                    @endforeach
-                @endif
-            </div>
-            
+
             <div class="col-md-12 form-group mb-3">
                 <h6>Use-case <span>*</span></h6>
                 <textarea class="form-control" name="use_case" id="" cols="30" rows="5">{!! $product->use_case ?? '' !!}</textarea>

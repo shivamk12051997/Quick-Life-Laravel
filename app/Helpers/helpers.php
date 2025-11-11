@@ -18,3 +18,8 @@ if (! function_exists('price_format')) {
         return '₹' . number_format($price, 2);
     }
 }
+if (! function_exists('live_url')) {
+    function live_url($path){
+        return env('REACT_APP_URL') . '/' . ltrim($path, '/');
+    }
+}
